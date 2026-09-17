@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المساعد الإلكتروني الذكي لوكيل المدرسة</title>
-    <!-- استيراد الخطوط وأيقونات FontAwesome -->
+    <title>مدرسة كدوة الكريون - مساعد وكيل المدرسة الشامل</title>
+    <!-- خطوط وأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -12,6 +12,8 @@
             --primary-color: #1b365d;
             --secondary-color: #334e68;
             --accent-color: #2bb673;
+            --danger-color: #e53e3e;
+            --warning-color: #d69e2e;
             --bg-color: #f4f7fc;
             --card-bg: #ffffff;
             --text-color: #333333;
@@ -34,7 +36,7 @@
 
         /* القائمة الجانبية */
         sidebar {
-            width: 260px;
+            width: 280px;
             background-color: var(--primary-color);
             color: white;
             display: flex;
@@ -42,6 +44,8 @@
             position: fixed;
             height: 100%;
             box-shadow: 3px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            z-index: 100;
         }
 
         .sidebar-header {
@@ -51,29 +55,31 @@
         }
 
         .sidebar-header h2 {
-            font-size: 1.2rem;
+            font-size: 1.05rem;
             margin-bottom: 5px;
+            color: #ffffff;
         }
 
         .sidebar-header p {
-            font-size: 0.8rem;
-            color: #a0aec0;
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            font-weight: 600;
         }
 
         .sidebar-menu {
             list-style: none;
-            padding: 20px 0;
+            padding: 15px 0;
             flex-grow: 1;
         }
 
         .sidebar-menu li {
-            padding: 12px 20px;
+            padding: 10px 20px;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
         }
 
         .sidebar-menu li:hover, .sidebar-menu li.active {
@@ -82,13 +88,13 @@
         }
 
         .sidebar-menu li i {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             width: 25px;
         }
 
         /* المحتوى الرئيسي */
         .main-content {
-            margin-right: 260px;
+            margin-right: 280px;
             flex-grow: 1;
             padding: 30px;
         }
@@ -105,7 +111,7 @@
         }
 
         .top-header h1 {
-            font-size: 1.4rem;
+            font-size: 1.25rem;
             color: var(--primary-color);
         }
 
@@ -114,6 +120,8 @@
             align-items: center;
             gap: 10px;
             font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
         }
 
         /* الأقسام (Tabs) */
@@ -128,41 +136,41 @@
         /* الكاردات الإحصائية */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
             margin-bottom: 30px;
         }
 
         .stat-card {
             background: var(--card-bg);
-            padding: 20px;
+            padding: 18px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
 
         .stat-icon {
-            width: 55px;
-            height: 55px;
-            border-radius: 10px;
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
             background: rgba(27, 54, 93, 0.1);
             color: var(--primary-color);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
 
         .stat-info h3 {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: var(--primary-color);
             margin-bottom: 2px;
         }
 
         .stat-info p {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: #718096;
         }
 
@@ -178,10 +186,12 @@
         .card-box h3 {
             margin-bottom: 20px;
             color: var(--primary-color);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 10px;
         }
 
         table {
@@ -191,10 +201,10 @@
         }
 
         th, td {
-            padding: 12px 15px;
+            padding: 11px 15px;
             text-align: right;
             border-bottom: 1px solid var(--border-color);
-            font-size: 0.95rem;
+            font-size: 0.88rem;
         }
 
         th {
@@ -210,20 +220,21 @@
         /* أزرار ونماذج الإدخال */
         .form-group {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
-        input, select {
+        input, select, textarea {
             padding: 10px 15px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            font-size: 0.95rem;
+            font-size: 0.88rem;
             flex-grow: 1;
             outline: none;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             border-color: var(--primary-color);
         }
 
@@ -236,22 +247,60 @@
             cursor: pointer;
             font-weight: 600;
             transition: background 0.3s;
+            font-size: 0.88rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn:hover {
             background-color: var(--secondary-color);
         }
 
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+        .btn-danger:hover {
+            background-color: #c53030;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        .btn-warning:hover {
+            background-color: #b7791f;
+        }
+
         .badge {
             padding: 5px 10px;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 600;
         }
 
         .badge-success { background: #d1fae5; color: #065f46; }
         .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-info { background: #e0f2fe; color: #0369a1; }
+        .badge-primary { background: #1b365d; color: #ffffff; }
 
+        .law-card {
+            background: #f8fafc;
+            border-right: 4px solid var(--primary-color);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        .law-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+        .law-card p {
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -259,24 +308,30 @@
     <!-- القائمة الجانبية -->
     <sidebar>
         <div class="sidebar-header">
-            <h2>مساعد الوكيل الذكي</h2>
-            <p>نظام الإدارة المدرسية</p>
+            <h2>مدرسة كدوة الكريون</h2>
+            <p>وكيل المدرسة: أ/ أميرة شلبي</p>
         </div>
         <ul class="sidebar-menu">
-            <li class="active" onclick="switchTab('dashboard', this)"><i class="fa-solid fa-chart-pie"></i> لوحة القيادة</li>
-            <li onclick="switchTab('tasks', this)"><i class="fa-solid fa-list-check"></i> مهام الوكيل</li>
-            <li onclick="switchTab('students', this)"><i class="fa-solid fa-users"></i> شئون الطلبة والغياب</li>
-            <li onclick="switchTab('teachers', this)"><i class="fa-solid fa-chalkboard-user"></i> متابعة المعلمين</li>
-            <li onclick="switchTab('substitution', this)"><i class="fa-solid fa-shuffle"></i> حصص الاحتياطي</li>
+            <li class="active" onclick="switchTab('dashboard', this)"><i class="fa-solid fa-chart-pie"></i> لوحة القيادة الشاملة</li>
+            <li onclick="switchTab('tasks', this)"><i class="fa-solid fa-list-check"></i> مهام ومسؤوليات الوكيل</li>
+            <li onclick="switchTab('laws', this)"><i class="fa-solid fa-scale-balanced"></i> القرارات المنظمة (ابتدائي وإعدادي)</li>
+            <li onclick="switchTab('students', this)"><i class="fa-solid fa-users"></i> غياب وانضباط الطلاب</li>
+            <li onclick="switchTab('record31', this)"><i class="fa-solid fa-book-open"></i> دفتر القيد العام (31)</li>
+            <li onclick="switchTab('teachers', this)"><i class="fa-solid fa-chalkboard-user"></i> شئون ومتابعة المعلمين</li>
+            <li onclick="switchTab('substitution', this)"><i class="fa-solid fa-shuffle"></i> حصص الاحتياطي اليومي</li>
+            <li onclick="switchTab('safety', this)"><i class="fa-solid fa-shield-halved"></i> سجل الأمن والسلامة</li>
+            <li onclick="switchTab('exams', this)"><i class="fa-solid fa-file-pen"></i> الامتحانات والكنترول</li>
+            <li onclick="switchTab('finance', this)"><i class="fa-solid fa-receipt"></i> الرسوم والاشتراكات (33 ع.ح)</li>
+            <li onclick="switchTab('settings', this)"><i class="fa-solid fa-gears"></i> إدارة اليوم وإعدادات الحفظ</li>
         </ul>
     </sidebar>
 
     <!-- المحتوى الرئيسي -->
     <div class="main-content">
         <header class="top-header">
-            <h1 id="page-title">لوحة القيادة العامة</h1>
+            <h1 id="page-title">لوحة القيادة الشاملة</h1>
             <div class="user-info">
-                <i class="fa-solid fa-user-tie"></i> أخصائي / وكيل المدرسة
+                <i class="fa-solid fa-user-tie"></i> أ/ أميرة شلبي - وكيل المدرسة
             </div>
         </header>
 
@@ -284,250 +339,467 @@
         <section id="dashboard" class="tab-section active">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon"><i class="fa-solid fa-list-check"></i></div>
-                    <div class="stat-info">
-                        <h3 id="stat-total-tasks">16</h3>
-                        <p>إجمالي المهام المسجلة</p>
-                    </div>
+                    <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                    <div class="stat-info"><h3 id="stat-r31">0</h3><p>قيد طلاب المدرسة</p></div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon"><i class="fa-solid fa-user-xmark"></i></div>
-                    <div class="stat-info">
-                        <h3 id="stat-absent-students">3</h3>
-                        <p>حالات غياب الطلبة اليوم</p>
-                    </div>
+                    <div class="stat-info"><h3 id="stat-absent">0</h3><p>حالات الغياب المسجلة</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+                    <div class="stat-info"><h3 id="stat-teachers">0</h3><p>المعلمين والعاملين</p></div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon"><i class="fa-solid fa-chalkboard"></i></div>
-                    <div class="stat-info">
-                        <h3 id="stat-subs">4</h3>
-                        <p>حصص احتياطي مسكنة</p>
-                    </div>
+                    <div class="stat-info"><h3 id="stat-subs">0</h3><p>حصص الاحتياطي المسكنة</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="stat-info"><h3 id="stat-safety">0</h3><p>فحوصات الأمن والسلامة</p></div>
                 </div>
             </div>
 
             <div class="card-box">
-                <h3>مرحباً بك في نظام مساعد وكيل المدرسة الذكي</h3>
-                <p style="line-height: 1.8; color: #555;">
-                    يُتيح لك هذا النظام إدارة ومتابعة الأعمال اليومية والأسبوعية لشون الطلبة والمعلمين، توزيع حصص الاحتياطي، ورصد حالات الغياب والانضباط بكل سهولة واحترافية. استخدم القائمة الجانبية للتنقل بين الأقسام المختلفة.
+                <h3>مرحباً بحضرتك يا أستاذة / أميرة شلبي في نظام مدرسة كدوة الكريون</h3>
+                <p style="line-height: 1.8; color: #555; margin-bottom: 15px;">
+                    هذا النظام مصمم خصيصاً لتسهيل وميكنة كافة أعمال وكيل المدرسة (متابعة الغياب، الاحتياطي، دفتر 31، شئون المعلمين، الأمن والسلامة، والقرارات المنظمة للمرحلتين الابتدائية والإعدادية).
                 </p>
+                <div style="background: #e0f2fe; padding: 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #0369a1; font-weight: 600; font-size: 0.9rem;"><i class="fa-solid fa-circle-info"></i> هل انتهى اليوم الدراسي وتريد تصفير الغياب وحصص الاحتياطي للبدء بيوم جديد؟</span>
+                    <button class="btn btn-warning" onclick="resetNewDay()"><i class="fa-solid fa-rotate"></i> تدوير وإعادة ضبط يوم جديد</button>
+                </div>
             </div>
         </section>
 
         <!-- 2. مهام الوكيل -->
         <section id="tasks" class="tab-section">
             <div class="card-box">
-                <h3>قائمة المهام والمسؤوليات</h3>
+                <h3>قائمة المهام والمسؤوليات الأساسية والإشرافية</h3>
                 <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>التصنيف</th>
-                            <th>التوقيت</th>
-                            <th>المهمة الرئيسية</th>
-                            <th>الحالة</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tasks-table-body">
-                        <!-- تملأ برمجياً -->
-                    </tbody>
+                    <thead><tr><th>#</th><th>التصنيف</th><th>التوقيت</th><th>المهمة الرئيسية</th><th>الحالة</th></tr></thead>
+                    <tbody id="tasks-table-body"></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- 3. شئون الطلبة -->
+        <!-- 3. القرارات المنظمة -->
+        <section id="laws" class="tab-section">
+            <div class="card-box">
+                <h3>القرارات الوزارية والكتب الدوريّة المنظمة للمرحلتين الابتدائية والإعدادية</h3>
+                
+                <div class="law-card">
+                    <h4>1. نظام التقييمات والامتحانات لمرحلة التعليم الأساسي (الابتدائي والإعدادي)</h4>
+                    <p>القرارات المنظمة لأعمال الامتحانات، توزيع درجات أعمال السنة، الاختبارات الشهرية، وتقييم الأداء الصفي والمنزلي والواجبات المدرسية، ونسب الحضور والغياب المقررة.</p>
+                </div>
+
+                <div class="law-card">
+                    <h4>2. لائحة الانضباط المدرسي وحقوق وواجبات الطلاب</h4>
+                    <p>القرار الوزاري المنظم لتطبيق لائحة الانضباط المدرسي، معالجة حالات التأخر الصباحي، الغياب المتكرر، وتدرج الإجراءات التربوية والعلاجية لتعديل سلوك الطلاب.</p>
+                </div>
+
+                <div class="law-card">
+                    <h4>3. تنظيم أعمال الكنترول وشئون الطلبة (دفتر 31 وقيد الطلاب)</h4>
+                    <p>التعليمات المنظمة لتسجيل الطلاب بدفتر القيد العام (31)، شروط قبول التحويلات، استخراج الشهادات، ومواعيد تشكيل لجان السير ورصد الدرجات.</p>
+                </div>
+
+                <div class="law-card">
+                    <h4>4. سجلات الأمن والسلامة ودفتر الحضور والإنصراف للعاملين</h4>
+                    <p>القرارات الخاصة بمتابعة طفايات الحريق، خطة الإخلاء، غلق دفتر الحضور والانصراف في المواعيد القانونية المحددة، ومتابعة حضور المعلمين الحصص بدقة.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. غياب الطلاب -->
         <section id="students" class="tab-section">
             <div class="card-box">
-                <h3>تسجيل ومتابعة غياب الطلبة</h3>
+                <h3>سجل متابعة الغياب والانضباط اليومي للطلاب</h3>
                 <div class="form-group">
                     <input type="text" id="stud-name" placeholder="اسم الطالب رباعي">
                     <input type="text" id="stud-class" placeholder="الصف / الفصل">
-                    <input type="text" id="stud-reason" placeholder="سبب أو عذر الغياب">
-                    <button class="btn" onclick="addStudentAbsence()">إضافة للحصر</button>
+                    <input type="text" id="stud-reason" placeholder="سبب الغياب (عذر / بدون)">
+                    <button class="btn" onclick="addStudentAbsence()">تسجيل غياب اليوم</button>
                 </div>
                 <table>
-                    <thead>
-                        <tr>
-                            <th>اسم الطالب</th>
-                            <th>الفصل</th>
-                            <th>العذر</th>
-                            <th>الإجراء المتخذ</th>
-                            <th>الحالة</th>
-                        </tr>
-                    </thead>
-                    <tbody id="students-table-body">
-                        <tr>
-                            <td>أحمد محمد علي</td>
-                            <td>أولى ثانوي (1)</td>
-                            <td>بدون عذر</td>
-                            <td>إرسال إنذار أول</td>
-                            <td><span class="badge badge-warning">قيد المتابعة</span></td>
-                        </tr>
-                    </tbody>
+                    <thead><tr><th>اسم الطالب</th><th>الفصل</th><th>العذر</th><th>الإجراء القانوني</th><th>الحالة</th></tr></thead>
+                    <tbody id="students-table-body"></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- 4. متابعة المعلمين -->
+        <!-- 5. دفتر 31 (القيد العام) -->
+        <section id="record31" class="tab-section">
+            <div class="card-box">
+                <h3>سجل القيد العام للطلاب (دفتر 31)</h3>
+                <div class="form-group">
+                    <input type="text" id="r31-name" placeholder="اسم الطالب رباعي">
+                    <input type="text" id="r31-nid" placeholder="الرقم القومي (14 رقم)">
+                    <input type="text" id="r31-class" placeholder="الصف / الفصل">
+                    <select id="r31-type"><option value="مستجد">مستجد</option><option value="باقي للإعادة">باقي للإعادة</option><option value="محول">محول</option></select>
+                    <button class="btn" onclick="addRecord31()">إضافة للقيد</button>
+                </div>
+                <table>
+                    <thead><tr><th>الاسم الرباعي</th><th>الرقم القومي</th><th>الصف والفصل</th><th>حالة القيد</th><th>تاريخ التسجيل</th></tr></thead>
+                    <tbody id="r31-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 6. شئون المعلمين -->
         <section id="teachers" class="tab-section">
             <div class="card-box">
-                <h3>جدول متابعة المعلمين والعاملين اليومي</h3>
+                <h3>سجل المعلمين والعاملين بالمدرسة</h3>
+                <div class="form-group">
+                    <input type="text" id="teach-name" placeholder="اسم المعلم / الموظف ثلاثي أو رباعي">
+                    <input type="text" id="teach-subject" placeholder="المادة / الوظيفة">
+                    <input type="text" id="teach-phone" placeholder="رقم الهاتف">
+                    <button class="btn" onclick="addTeacher()">إضافة للمعلمين</button>
+                </div>
                 <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>التصنيف</th>
-                            <th>التوقيت</th>
-                            <th>بند المتابعة</th>
-                            <th>الحالة</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>1</td><td>يومي</td><td>صباحاً</td><td>متابعة حضور المعلمين بدفتر الحضور والانصراف وغلقه قانوناً</td><td><span class="badge badge-success">تم</span></td></tr>
-                        <tr><td>2</td><td>يومي</td><td>الحصة الأولى</td><td>إعداد جدول الاحتياطي والبدلاء لسد العجز</td><td><span class="badge badge-success">تم</span></td></tr>
-                        <tr><td>3</td><td>أسبوعي</td><td>الإثنين</td><td>متابعة سجل الأمن والسلامة وطفايات الحريق</td><td><span class="badge badge-success">تم</span></td></tr>
-                    </tbody>
+                    <thead><tr><th>اسم المعلم</th><th>المادة / الوظيفة</th><th>رقم الهاتف</th><th>موقف الحضور اليومي</th></tr></thead>
+                    <tbody id="teachers-table-body"></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- 5. حصص الاحتياطي -->
+        <!-- 7. حصص الاحتياطي -->
         <section id="substitution" class="tab-section">
             <div class="card-box">
                 <h3>سجل حصص الاحتياطي والبدلاء اليومي</h3>
                 <div class="form-group">
                     <input type="text" id="absent-teacher" placeholder="اسم المعلم الغائب">
                     <input type="text" id="target-class" placeholder="الفصل المتأثر">
-                    <input type="text" id="sub-teacher" placeholder="المعلم البديل">
-                    <button class="btn" onclick="addSubstitution()">تسجيل البديل</button>
+                    <input type="text" id="sub-teacher" placeholder="المعلم البديل المقترح">
+                    <button class="btn" onclick="addSubstitution()">تسكين البديل</button>
                 </div>
                 <table>
-                    <thead>
-                        <tr>
-                            <th>المعلم الغائب</th>
-                            <th>الفصل</th>
-                            <th>المعلم البديل المقترح</th>
-                            <th>حالة التسكين</th>
-                        </tr>
-                    </thead>
-                    <tbody id="sub-table-body">
-                        <tr>
-                            <td>أ. محمد رضا</td>
-                            <td>أولى ثانوي (1)</td>
-                            <td>أ. أحمد محمود</td>
-                            <td><span class="badge badge-success">مكتمل</span></td>
-                        </tr>
-                    </tbody>
+                    <thead><tr><th>المعلم الغائب</th><th>الفصل</th><th>المعلم البديل</th><th>حالة التسكين</th></tr></thead>
+                    <tbody id="sub-table-body"></tbody>
                 </table>
+            </div>
+        </section>
+
+        <!-- 8. الأمن والسلامة -->
+        <section id="safety" class="tab-section">
+            <div class="card-box">
+                <h3>سجل الأمن والسلامة المدرسية وطفايات الحريق</h3>
+                <div class="form-group">
+                    <input type="text" id="safety-item" placeholder="بند الفحص (مثلاً: طفايات الحريق، الفصول)">
+                    <select id="safety-status"><option value="سليم ومطابق">سليم ومطابق</option><option value="يحتاج صيانة عاجلة">يحتاج صيانة عاجلة</option></select>
+                    <input type="text" id="safety-notes" placeholder="ملاحظات تفصيلية">
+                    <button class="btn" onclick="addSafetyRecord()">تسجيل المرور</button>
+                </div>
+                <table>
+                    <thead><tr><th>بند المرور</th><th>الحالة الفنية</th><th>الملاحظات</th><th>تاريخ الفحص</th></tr></thead>
+                    <tbody id="safety-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 9. الامتحانات والكنترول -->
+        <section id="exams" class="tab-section">
+            <div class="card-box">
+                <h3>سجل تنظيم أعمال الامتحانات والكنترول</h3>
+                <div class="form-group">
+                    <input type="text" id="exam-name" placeholder="اسم الاختبار (مثلاً: اختبار الشهر الأول)">
+                    <input type="text" id="exam-class" placeholder="الصف المستهدف">
+                    <input type="text" id="exam-date" placeholder="موعد التنفيذ / الأسبوع">
+                    <button class="btn" onclick="addExamTask()">إضافة لخطة الامتحانات</button>
+                </div>
+                <table>
+                    <thead><tr><th>اسم الاختبار / النشاط</th><th>الصف</th><th>التوقيت</th><th>الحالة الإدارية</th></tr></thead>
+                    <tbody id="exams-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 10. الرسوم والاشتراكات -->
+        <section id="finance" class="tab-section">
+            <div class="card-box">
+                <h3>سجل تحصيل الرسوم والاشتراكات المدرسية (دفتر 33 ع.ح)</h3>
+                <div class="form-group">
+                    <input type="text" id="fin-name" placeholder="اسم الطالب رباعي">
+                    <input type="text" id="fin-type" placeholder="نوع الرسوم">
+                    <input type="number" id="fin-amount" placeholder="المبلغ (بالجنيه)">
+                    <button class="btn" onclick="addFinanceRecord()">إثبات توريد</button>
+                </div>
+                <table>
+                    <thead><tr><th>اسم الطالب</th><th>نوع الرسوم</th><th>المبلغ المدفوع</th><th>تاريخ التوريد</th></tr></thead>
+                    <tbody id="finance-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 11. إعدادات وحفظ البيانات -->
+        <section id="settings" class="tab-section">
+            <div class="card-box">
+                <h3>إدارة البيانات وإعادة الضبط</h3>
+                <p style="margin-bottom: 20px; color: #666; font-size: 0.9rem;">
+                    يمكنك بدء يوم دراسي جديد لتفريغ الغياب والاحتياطي اليومي فقط مع الاحتفاظ بسجلات القيد والمعلمين، أو تصدير نسخة احتياطية كاملة.
+                </p>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <button class="btn btn-warning" onclick="resetNewDay()"><i class="fa-solid fa-rotate"></i> تدوير وبدء يوم دراسي جديد</button>
+                    <button class="btn" onclick="exportData()"><i class="fa-solid fa-download"></i> تصدير وحفظ نسخة احتياطية (JSON)</button>
+                    <button class="btn btn-danger" onclick="clearAllData()"><i class="fa-solid fa-trash"></i> مسح وتفريغ كافة بيانات النظام</button>
+                </div>
             </div>
         </section>
     </div>
 
-    <!-- جافاسكريبت تفاعلي للموقع -->
+    <!-- البرمجة الشاملة والتخزين -->
     <script>
-        // بيانات المهام
         const tasksData = [
-            {cat: "متابعة يومية", time: "قبل الطابور", task: "المرور العام على نظافة الفصول ودورات المياه", status: "مكتمل"},
-            {cat: "متابعة يومية", time: "صباحاً", task: "متابعة حضور طلاب المدرسة والانضباط الصباحي", status: "مكتمل"},
-            {cat: "متابعة يومية", time: "أثناء الطابور", task: "الإشراف على الإذاعة المدرسية وتحية العلم ومظهر الطلاب", status: "مكتمل"},
-            {cat: "متابعة يومية", time: "الحصة الأولى", task: "حصر الغياب اليومي للفصول وتوزيع جدول الاحتياطي", status: "مكتمل"},
-            {cat: "متابعة يومية", time: "الفسحة", task: "الإشراف على توزيع مناوبات المعلمين في الفناء", status: "مكتمل"},
-            {cat: "متابعة أسبوعية", time: "الأحد", task: "تحديث ومراجعة بيانات وقيد دفتر شئون الطلبة (سجل 31)", status: "مكتمل"},
-            {cat: "متابعة أسبوعية", time: "الإثنين", task: "حصر نسب الغياب المتراكمة وإرسال الإنذارات", status: "مكتمل"},
-            {cat: "متابعة أسبوعية", time: "الثلاثاء", task: "التنسيق مع الأخصائي الاجتماعي والنفسي لدراسة الحالات", status: "مكتمل"}
+            {cat: "يومي", time: "قبل الطابور", task: "المرور على الفصول ونظافة المرافق والإشراف الصباحي", status: "مكتمل"},
+            {cat: "يومي", time: "صباحاً", task: "متابعة حضور العاملين وغلق دفتر الحضور قانوناً", status: "مكتمل"},
+            {cat: "يومي", time: "الحصة الأولى", task: "إعداد وتنفيذ جدول حصص الاحتياطي وتوزيع البدلاء", status: "مكتمل"},
+            {cat: "أسبوعي", time: "الأحد", task: "مراجعة وتحديث سجل وقيد الطلاب (دفتر 31)", status: "مكتمل"},
+            {cat: "أسبوعي", time: "الإثنين", task: "متابعة نسب الغياب وإرسال الإنذارات وتفعيل لائحة الانضباط", status: "مكتمل"},
+            {cat: "أسبوعي", time: "الثلاثاء", task: "مراجعة سجل الأمن والسلامة وطفايات الحريق", status: "مكتمل"},
+            {cat: "أسبوعي", time: "الأربعاء", task: "مراجعة دفاتر توريد وتحصيل الرسوم (دفتر 33 ع.ح)", status: "مكتمل"},
+            {cat: "أسبوعي", time: "الخميس", task: "مراجعة أعمال الكنترول والامتحانات وإعداد الإحصاء الأسبوعي", status: "مكتمل"}
         ];
 
-        // تعبئة جدول المهام عند التحميل
         window.onload = function() {
-            const tbody = document.getElementById('tasks-table-body');
-            tasksDataforEach = tasksData.forEach((item, index) => {
-                let row = `<tr>
-                    <td>${index + 1}</td>
-                    <td>${item.cat}</td>
-                    <td>${item.time}</td>
-                    <td>${item.task}</td>
-                    <td><span class="badge badge-success">${item.status}</span></td>
-                </tr>`;
-                tbody.innerHTML += row;
-            });
+            loadTasks();
+            loadStudents();
+            loadRecord31();
+            loadTeachers();
+            loadSubstitutions();
+            loadSafety();
+            loadExams();
+            loadFinance();
+            updateDashboardStats();
         };
 
-        // وظيفة التنقل بين الأقسام (Tabs)
         function switchTab(tabId, element) {
             document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
             element.classList.add('active');
 
-            // تغيير عنوان الصفحة العلوية
             const titles = {
-                'dashboard': 'لوحة القيادة العامة',
+                'dashboard': 'لوحة القيادة الشاملة - مدرسة كدوة الكريون',
                 'tasks': 'مهام ومسؤوليات الوكيل',
-                'students': 'شئون الطلبة ومتابعة الغياب',
-                'teachers': 'متابعة المعلمين والعاملين',
-                'substitution': 'جدول الاحتياطي اليومي'
+                'laws': 'القرارات المنظمة للمرحلتين الابتدائية والإعدادية',
+                'students': 'سجل غياب وانضباط الطلاب اليومي',
+                'record31': 'سجل القيد العام (دفتر 31 شون طلاب)',
+                'teachers': 'شئون ومتابعة المعلمين',
+                'substitution': 'سجل حصص الاحتياطي اليومي',
+                'safety': 'سجل الأمن والسلامة المدرسية',
+                'exams': 'سجل الامتحانات والكنترول',
+                'finance': 'سجل الرسوم والاشتراكات (33 ع.ح)',
+                'settings': 'إدارة اليوم وإعدادات الحفظ'
             };
             document.getElementById('page-title').innerText = titles[tabId];
         }
 
-        // إضافة طالب غائب تفاعلياً
+        function updateDashboardStats() {
+            document.getElementById('stat-r31').innerText = (JSON.parse(localStorage.getItem('school_r31')) || []).length;
+            document.getElementById('stat-absent').innerText = (JSON.parse(localStorage.getItem('school_students')) || []).length;
+            document.getElementById('stat-teachers').innerText = (JSON.parse(localStorage.getItem('school_teachers')) || []).length;
+            document.getElementById('stat-subs').innerText = (JSON.parse(localStorage.getItem('school_subs')) || []).length;
+            document.getElementById('stat-safety').innerText = (JSON.parse(localStorage.getItem('school_safety')) || []).length;
+        }
+
+        // زر إعادة ضبط وبدء يوم جديد (يفرغ غياب الطلاب والاحتياطي اليومي فقط ويحافظ على القيد والمعلمين)
+        function resetNewDay() {
+            if(confirm('هل أنتِ متأكدة من بدء يوم دراسي جديد؟ سيتم تصفير جدول حصص الاحتياطي وحالات الغياب اليومية لتسجيل بيانات اليوم الجديد، مع الاحتفاظ ببيانات القيد الأساسية والمعلمين.')) {
+                localStorage.removeItem('school_students');
+                localStorage.removeItem('school_subs');
+                loadStudents();
+                loadSubstitutions();
+                updateDashboardStats();
+                alert('تمت تهيئة النظام بنجاح لبدء اليوم الدراسي الجديد!');
+            }
+        }
+
+        // المهام
+        function loadTasks() {
+            const tbody = document.getElementById('tasks-table-body');
+            tbody.innerHTML = '';
+            tasksData.forEach((item, index) => {
+                tbody.innerHTML += `<tr><td>${index+1}</td><td>${item.cat}</td><td>${item.time}</td><td>${item.task}</td><td><span class="badge badge-success">${item.status}</span></td></tr>`;
+            });
+        }
+
+        // غياب الطلاب
+        function loadStudents() {
+            const data = JSON.parse(localStorage.getItem('school_students')) || [];
+            const tbody = document.getElementById('students-table-body');
+            tbody.innerHTML = data.length === 0 ? `<tr><td colspan="5" style="text-align:center; color:#718096;">لا توجد حالات غياب مسجلة اليوم</td></tr>` : '';
+            data.forEach(s => {
+                tbody.innerHTML += `<tr><td>${s.name}</td><td>${s.cls}</td><td>${s.reason}</td><td>إنذار وتواصل مع ولي الأمر</td><td><span class="badge badge-warning">قيد المتابعة</span></td></tr>`;
+            });
+            updateDashboardStats();
+        }
         function addStudentAbsence() {
             const name = document.getElementById('stud-name').value;
             const cls = document.getElementById('stud-class').value;
             const reason = document.getElementById('stud-reason').value;
-
-            if(!name || !cls) {
-                alert('الرجاء إدخال اسم الطالب وفصله على الأقل');
-                return;
-            }
-
-            const tbody = document.getElementById('students-table-body');
-            let row = `<tr>
-                <td>${name}</td>
-                <td>${cls}</td>
-                <td>${reason || 'بدون عذر'}</td>
-                <td>متابعة مع ولي الأمر</td>
-                <td><span class="badge badge-warning">قيد المتابعة</span></td>
-            </tr>`;
-            tbody.innerHTML += row;
-
-            // تفريغ الحقول
-            document.getElementById('stud-name').value = '';
-            document.getElementById('stud-class').value = '';
-            document.getElementById('stud-reason').value = '';
-
-            // تحديث العداد
-            let currentCount = parseInt(document.getElementById('stat-absent-students').innerText);
-            document.getElementById('stat-absent-students').innerText = currentCount + 1;
+            if(!name || !cls) { alert('الرجاء إدخال اسم الطالب والفصل'); return; }
+            let data = JSON.parse(localStorage.getItem('school_students')) || [];
+            data.push({name, cls, reason: reason || 'بدون عذر'});
+            localStorage.setItem('school_students', JSON.stringify(data));
+            document.getElementById('stud-name').value = ''; document.getElementById('stud-class').value = ''; document.getElementById('stud-reason').value = '';
+            loadStudents();
         }
 
-        // إضافة حصة احتياطي تفاعلياً
+        // دفتر 31
+        function loadRecord31() {
+            const data = JSON.parse(localStorage.getItem('school_r31')) || [];
+            const tbody = document.getElementById('r31-table-body');
+            tbody.innerHTML = data.length === 0 ? `<tr><td colspan="5" style="text-align:center; color:#718096;">لا توجد سجلات قيد حتى الآن</td></tr>` : '';
+            data.forEach(r => {
+                tbody.innerHTML += `<tr><td>${r.name}</td><td>${r.nid}</td><td>${r.cls}</td><td><span class="badge badge-success">${r.type}</span></td><td>${r.date}</td></tr>`;
+            });
+            updateDashboardStats();
+        }
+        function addRecord31() {
+            const name = document.getElementById('r31-name').value;
+            const nid = document.getElementById('r31-nid').value;
+            const cls = document.getElementById('r31-class').value;
+            const type = document.getElementById('r31-type').value;
+            if(!name || !cls) { alert('الرجاء إدخال بيانات الطالب'); return; }
+            let data = JSON.parse(localStorage.getItem('school_r31')) || [];
+            data.push({name, nid: nid || 'غير محدد', cls, type, date: new Date().toLocaleDateString('ar-EG')});
+            localStorage.setItem('school_r31', JSON.stringify(data));
+            document.getElementById('r31-name').value = ''; document.getElementById('r31-nid').value = ''; document.getElementById('r31-class').value = '';
+            loadRecord31();
+        }
+
+        // المعلمين
+        function loadTeachers() {
+            const data = JSON.parse(localStorage.getItem('school_teachers')) || [];
+            const tbody = document.getElementById('teachers-table-body');
+            tbody.innerHTML = data.length === 0 ? `<tr><td colspan="4" style="text-align:center; color:#718096;">لا توجد أسماء معلمين مسجلة</td></tr>` : '';
+            data.forEach(t => {
+                tbody.innerHTML += `<tr><td>${t.name}</td><td>${t.subject}</td><td>${t.phone}</td><td><span class="badge badge-success">حاضر وبدفتر الحضور</span></td></tr>`;
+            });
+            updateDashboardStats();
+        }
+        function addTeacher() {
+            const name = document.getElementById('teach-name').value;
+            const subject = document.getElementById('teach-subject').value;
+            const phone = document.getElementById('teach-phone').value;
+            if(!name) { alert('الرجاء إدخال اسم المعلم'); return; }
+            let data = JSON.parse(localStorage.getItem('school_teachers')) || [];
+            data.push({name, subject: subject || 'عام', phone: phone || 'غير متاح'});
+            localStorage.setItem('school_teachers', JSON.stringify(data));
+            document.getElementById('teach-name').value = ''; document.getElementById('teach-subject').value = ''; document.getElementById('teach-phone').value = '';
+            loadTeachers();
+        }
+
+        // الاحتياطي
+        function loadSubstitutions() {
+            const data = JSON.parse(localStorage.getItem('school_subs')) || [];
+            const tbody = document.getElementById('sub-table-body');
+            tbody.innerHTML = data.length === 0 ? `<tr><td colspan="4" style="text-align:center; color:#718096;">لا توجد حصص احتياطي مسكنة اليوم</td></tr>` : '';
+            data.forEach(sub => {
+                tbody.innerHTML += `<tr><td>${sub.absent}</td><td>${sub.cls}</td><td>${sub.sub}</td><td><span class="badge badge-success">تم التسكين</span></td></tr>`;
+            });
+            updateDashboardStats();
+        }
         function addSubstitution() {
             const absent = document.getElementById('absent-teacher').value;
             const cls = document.getElementById('target-class').value;
             const sub = document.getElementById('sub-teacher').value;
+            if(!absent || !sub) { alert('الرجاء إدخال المعلم الغائب والبديل'); return; }
+            let data = JSON.parse(localStorage.getItem('school_subs')) || [];
+            data.push({absent, cls: cls || 'عام', sub});
+            localStorage.setItem('school_subs', JSON.stringify(data));
+            document.getElementById('absent-teacher').value = ''; document.getElementById('target-class').value = ''; document.getElementById('sub-teacher').value = '';
+            loadSubstitutions();
+        }
 
-            if(!absent || !sub) {
-                alert('الرجاء إدخال اسم المعلم الغائب والمعلم البديل');
-                return;
+        // الأمن والسلامة
+        function loadSafety() {
+            const data = JSON.parse(localStorage.getItem('school_safety')) || [];
+            const tbody = document.getElementById('safety-table-body');
+            tbody.innerHTML = data.length === 0 ? `<tr><td colspan="4" style="text-align:center; color:#718096;">لا توجد سجلات أمن وسلامة</td></tr>` : '';
+            data.forEach(sf => {
+                tbody.innerHTML += `<tr><td>${sf.item}</td><td><span class="badge ${sf.status.includes('سليم')?'badge-success':'badge-warning'}">${sf.status}</span></td><td>${sf.notes}</td><td>${sf.date}</td></tr>`;
+            });
+            updateDashboardStats();
+        }
+        function addSafetyRecord() {
+            const item = document.getElementById('safety-item').value;
+            const status = document.getElementById('safety-status').value;
+            const notes = document.getElementById('safety-notes').value;
+            if(!item) { alert('الرجاء تحديد بند الفحص'); return; }
+            let data = JSON.parse(localStorage.getItem('school_safety')) || [];
+            data.push({item, status, notes: notes || 'لا توجد ملاحظات', date: new Date().toLocaleDateString('ar-EG')});
+            localStorage.setItem('school_safety', JSON.stringify(data));
+            document.getElementById('safety-item').value = ''; document.getElementById('safety-notes').value = '';
+            loadSafety();
+        }
+
+        // الامتحانات والكنترول
+        function loadExams() {
+            const data = JSON.parse(localStorage.getItem('school_exams')) || [];
+            const tbody = document.getElementById('exams-table-body');
+            tbody.innerHTML = data.length === 0 ? `<tr><td colspan="4" style="text-align:center; color:#718096;">لا توجد اختبارات مسجلة</td></tr>` : '';
+            data.forEach(ex => {
+                tbody.innerHTML += `<tr><td>${ex.name}</td><td>${ex.cls}</td><td>${ex.date}</td><td><span class="badge badge-info">قيد الإعداد</span></td></tr>`;
+            });
+        }
+        function addExamTask() {
+            const name = document.getElementById('exam-name').value;
+            const cls = document.getElementById('exam-class').value;
+            const date = document.getElementById('exam-date').value;
+            if(!name) { alert('الرجاء إدخال اسم الاختبار'); return; }
+            let data = JSON.parse(localStorage.getItem('school_exams')) || [];
+            data.push({name, cls: cls || 'عام', date: date || 'قريباً'});
+            localStorage.setItem('school_exams', JSON.stringify(data));
+            document.getElementById('exam-name').value = ''; document.getElementById('exam-class').value = ''; document.getElementById('exam-date').value = '';
+            loadExams();
+        }
+
+        // الرسوم
+        function loadFinance() {
+            const data = JSON.parse(localStorage.getItem('school_finance')) || [];
+            const tbody = document.getElementById('finance-table-body');
+            tbody.innerHTML = data.length === 0 ? `<tr><td colspan="4" style="text-align:center; color:#718096;">لا توجد توريدات مالية مسجلة</td></tr>` : '';
+            data.forEach(f => {
+                tbody.innerHTML += `<tr><td>${f.name}</td><td>${f.type}</td><td>${f.amount} جنيه</td><td>${f.date}</td></tr>`;
+            });
+        }
+        function addFinanceRecord() {
+            const name = document.getElementById('fin-name').value;
+            const type = document.getElementById('fin-type').value;
+            const amount = document.getElementById('fin-amount').value;
+            if(!name || !amount) { alert('الرجاء إدخال اسم الطالب والمبلغ'); return; }
+            let data = JSON.parse(localStorage.getItem('school_finance')) || [];
+            data.push({name, type: type || 'رسوم مدرسية', amount, date: new Date().toLocaleDateString('ar-EG')});
+            localStorage.setItem('school_finance', JSON.stringify(data));
+            document.getElementById('fin-name').value = ''; document.getElementById('fin-type').value = ''; document.getElementById('fin-amount').value = '';
+            loadFinance();
+        }
+
+        // تصدير النسخة الاحتياطية
+        function exportData() {
+            const allData = {
+                students: localStorage.getItem('school_students'),
+                r31: localStorage.getItem('school_r31'),
+                teachers: localStorage.getItem('school_teachers'),
+                subs: localStorage.getItem('school_subs'),
+                safety: localStorage.getItem('school_safety'),
+                exams: localStorage.getItem('school_exams'),
+                finance: localStorage.getItem('school_finance')
+            };
+            const blob = new Blob([JSON.stringify(allData, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Kadwa_ElKaryon_School_${new Date().toLocaleDateString('en-GB')}.json`;
+            a.click();
+        }
+
+        // مسح البيانات
+        function clearAllData() {
+            if(confirm('هل أنتِ متأكدة تماماً من رغبتك في حذف جميع البيانات؟')) {
+                localStorage.clear();
+                location.reload();
             }
-
-            const tbody = document.getElementById('sub-table-body');
-            let row = `<tr>
-                <td>${absent}</td>
-                <td>${cls}</td>
-                <td>${sub}</td>
-                <td><span class="badge badge-success">مكتمل</span></td>
-            </tr>`;
-            tbody.innerHTML += row;
-
-            document.getElementById('absent-teacher').value = '';
-            document.getElementById('target-class').value = '';
-            document.getElementById('sub-teacher').value = '';
-
-            let currentCount = parseInt(document.getElementById('stat-subs').innerText);
-            document.getElementById('stat-subs').innerText = currentCount + 1;
         }
     </script>
 </body>
