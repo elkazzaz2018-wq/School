@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المساعد الإلكتروني الذكي لوكيل المدرسة</title>
+    <!-- استيراد الخطوط وأيقونات FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1b365d;
+            --secondary-color: #334e68;
+            --accent-color: #2bb673;
+            --bg-color: #f4f7fc;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* القائمة الجانبية */
+        sidebar {
+            width: 260px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100%;
+            box-shadow: 3px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.8rem;
+            color: #a0aec0;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+            flex-grow: 1;
+        }
+
+        .sidebar-menu li {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-menu li:hover, .sidebar-menu li.active {
+            background-color: var(--secondary-color);
+            border-right: 4px solid var(--accent-color);
+        }
+
+        .sidebar-menu li i {
+            font-size: 1.1rem;
+            width: 25px;
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            margin-right: 260px;
+            flex-grow: 1;
+            padding: 30px;
+        }
+
+        header.top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 15px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .top-header h1 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        /* الأقسام (Tabs) */
+        .tab-section {
+            display: none;
+        }
+
+        .tab-section.active {
+            display: block;
+        }
+
+        /* الكاردات الإحصائية */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 10px;
+            background: rgba(27, 54, 93, 0.1);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-info h3 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 2px;
+        }
+
+        .stat-info p {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        /* الجداول والنماذج */
+        .card-box {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .card-box h3 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* أزرار ونماذج الإدخال */
+        .form-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        input, select {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            flex-grow: 1;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+
+    </style>
+</head>
+<body>
+
+    <!-- القائمة الجانبية -->
+    <sidebar>
+        <div class="sidebar-header">
+            <h2>مساعد الوكيل الذكي</h2>
+            <p>نظام الإدارة المدرسية</p>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="active" onclick="switchTab('dashboard', this)"><i class="fa-solid fa-chart-pie"></i> لوحة القيادة</li>
+            <li onclick="switchTab('tasks', this)"><i class="fa-solid fa-list-check"></i> مهام الوكيل</li>
+            <li onclick="switchTab('students', this)"><i class="fa-solid fa-users"></i> شئون الطلبة والغياب</li>
+            <li onclick="switchTab('teachers', this)"><i class="fa-solid fa-chalkboard-user"></i> متابعة المعلمين</li>
+            <li onclick="switchTab('substitution', this)"><i class="fa-solid fa-shuffle"></i> حصص الاحتياطي</li>
+        </ul>
+    </sidebar>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+        <header class="top-header">
+            <h1 id="page-title">لوحة القيادة العامة</h1>
+            <div class="user-info">
+                <i class="fa-solid fa-user-tie"></i> أخصائي / وكيل المدرسة
+            </div>
+        </header>
+
+        <!-- 1. لوحة القيادة -->
+        <section id="dashboard" class="tab-section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-list-check"></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-total-tasks">16</h3>
+                        <p>إجمالي المهام المسجلة</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-user-xmark"></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-absent-students">3</h3>
+                        <p>حالات غياب الطلبة اليوم</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-chalkboard"></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-subs">4</h3>
+                        <p>حصص احتياطي مسكنة</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-box">
+                <h3>مرحباً بك في نظام مساعد وكيل المدرسة الذكي</h3>
+                <p style="line-height: 1.8; color: #555;">
+                    يُتيح لك هذا النظام إدارة ومتابعة الأعمال اليومية والأسبوعية لشون الطلبة والمعلمين، توزيع حصص الاحتياطي، ورصد حالات الغياب والانضباط بكل سهولة واحترافية. استخدم القائمة الجانبية للتنقل بين الأقسام المختلفة.
+                </p>
+            </div>
+        </section>
+
+        <!-- 2. مهام الوكيل -->
+        <section id="tasks" class="tab-section">
+            <div class="card-box">
+                <h3>قائمة المهام والمسؤوليات</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>التصنيف</th>
+                            <th>التوقيت</th>
+                            <th>المهمة الرئيسية</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tasks-table-body">
+                        <!-- تملأ برمجياً -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 3. شئون الطلبة -->
+        <section id="students" class="tab-section">
+            <div class="card-box">
+                <h3>تسجيل ومتابعة غياب الطلبة</h3>
+                <div class="form-group">
+                    <input type="text" id="stud-name" placeholder="اسم الطالب رباعي">
+                    <input type="text" id="stud-class" placeholder="الصف / الفصل">
+                    <input type="text" id="stud-reason" placeholder="سبب أو عذر الغياب">
+                    <button class="btn" onclick="addStudentAbsence()">إضافة للحصر</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>اسم الطالب</th>
+                            <th>الفصل</th>
+                            <th>العذر</th>
+                            <th>الإجراء المتخذ</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-table-body">
+                        <tr>
+                            <td>أحمد محمد علي</td>
+                            <td>أولى ثانوي (1)</td>
+                            <td>بدون عذر</td>
+                            <td>إرسال إنذار أول</td>
+                            <td><span class="badge badge-warning">قيد المتابعة</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 4. متابعة المعلمين -->
+        <section id="teachers" class="tab-section">
+            <div class="card-box">
+                <h3>جدول متابعة المعلمين والعاملين اليومي</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>التصنيف</th>
+                            <th>التوقيت</th>
+                            <th>بند المتابعة</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>يومي</td><td>صباحاً</td><td>متابعة حضور المعلمين بدفتر الحضور والانصراف وغلقه قانوناً</td><td><span class="badge badge-success">تم</span></td></tr>
+                        <tr><td>2</td><td>يومي</td><td>الحصة الأولى</td><td>إعداد جدول الاحتياطي والبدلاء لسد العجز</td><td><span class="badge badge-success">تم</span></td></tr>
+                        <tr><td>3</td><td>أسبوعي</td><td>الإثنين</td><td>متابعة سجل الأمن والسلامة وطفايات الحريق</td><td><span class="badge badge-success">تم</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 5. حصص الاحتياطي -->
+        <section id="substitution" class="tab-section">
+            <div class="card-box">
+                <h3>سجل حصص الاحتياطي والبدلاء اليومي</h3>
+                <div class="form-group">
+                    <input type="text" id="absent-teacher" placeholder="اسم المعلم الغائب">
+                    <input type="text" id="target-class" placeholder="الفصل المتأثر">
+                    <input type="text" id="sub-teacher" placeholder="المعلم البديل">
+                    <button class="btn" onclick="addSubstitution()">تسجيل البديل</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>المعلم الغائب</th>
+                            <th>الفصل</th>
+                            <th>المعلم البديل المقترح</th>
+                            <th>حالة التسكين</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sub-table-body">
+                        <tr>
+                            <td>أ. محمد رضا</td>
+                            <td>أولى ثانوي (1)</td>
+                            <td>أ. أحمد محمود</td>
+                            <td><span class="badge badge-success">مكتمل</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- جافاسكريبت تفاعلي للموقع -->
+    <script>
+        // بيانات المهام
+        const tasksData = [
+            {cat: "متابعة يومية", time: "قبل الطابور", task: "المرور العام على نظافة الفصول ودورات المياه", status: "مكتمل"},
+            {cat: "متابعة يومية", time: "صباحاً", task: "متابعة حضور طلاب المدرسة والانضباط الصباحي", status: "مكتمل"},
+            {cat: "متابعة يومية", time: "أثناء الطابور", task: "الإشراف على الإذاعة المدرسية وتحية العلم ومظهر الطلاب", status: "مكتمل"},
+            {cat: "متابعة يومية", time: "الحصة الأولى", task: "حصر الغياب اليومي للفصول وتوزيع جدول الاحتياطي", status: "مكتمل"},
+            {cat: "متابعة يومية", time: "الفسحة", task: "الإشراف على توزيع مناوبات المعلمين في الفناء", status: "مكتمل"},
+            {cat: "متابعة أسبوعية", time: "الأحد", task: "تحديث ومراجعة بيانات وقيد دفتر شئون الطلبة (سجل 31)", status: "مكتمل"},
+            {cat: "متابعة أسبوعية", time: "الإثنين", task: "حصر نسب الغياب المتراكمة وإرسال الإنذارات", status: "مكتمل"},
+            {cat: "متابعة أسبوعية", time: "الثلاثاء", task: "التنسيق مع الأخصائي الاجتماعي والنفسي لدراسة الحالات", status: "مكتمل"}
+        ];
+
+        // تعبئة جدول المهام عند التحميل
+        window.onload = function() {
+            const tbody = document.getElementById('tasks-table-body');
+            tasksDataforEach = tasksData.forEach((item, index) => {
+                let row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${item.cat}</td>
+                    <td>${item.time}</td>
+                    <td>${item.task}</td>
+                    <td><span class="badge badge-success">${item.status}</span></td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        };
+
+        // وظيفة التنقل بين الأقسام (Tabs)
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+
+            // تغيير عنوان الصفحة العلوية
+            const titles = {
+                'dashboard': 'لوحة القيادة العامة',
+                'tasks': 'مهام ومسؤوليات الوكيل',
+                'students': 'شئون الطلبة ومتابعة الغياب',
+                'teachers': 'متابعة المعلمين والعاملين',
+                'substitution': 'جدول الاحتياطي اليومي'
+            };
+            document.getElementById('page-title').innerText = titles[tabId];
+        }
+
+        // إضافة طالب غائب تفاعلياً
+        function addStudentAbsence() {
+            const name = document.getElementById('stud-name').value;
+            const cls = document.getElementById('stud-class').value;
+            const reason = document.getElementById('stud-reason').value;
+
+            if(!name || !cls) {
+                alert('الرجاء إدخال اسم الطالب وفصله على الأقل');
+                return;
+            }
+
+            const tbody = document.getElementById('students-table-body');
+            let row = `<tr>
+                <td>${name}</td>
+                <td>${cls}</td>
+                <td>${reason || 'بدون عذر'}</td>
+                <td>متابعة مع ولي الأمر</td>
+                <td><span class="badge badge-warning">قيد المتابعة</span></td>
+            </tr>`;
+            tbody.innerHTML += row;
+
+            // تفريغ الحقول
+            document.getElementById('stud-name').value = '';
+            document.getElementById('stud-class').value = '';
+            document.getElementById('stud-reason').value = '';
+
+            // تحديث العداد
+            let currentCount = parseInt(document.getElementById('stat-absent-students').innerText);
+            document.getElementById('stat-absent-students').innerText = currentCount + 1;
+        }
+
+        // إضافة حصة احتياطي تفاعلياً
+        function addSubstitution() {
+            const absent = document.getElementById('absent-teacher').value;
+            const cls = document.getElementById('target-class').value;
+            const sub = document.getElementById('sub-teacher').value;
+
+            if(!absent || !sub) {
+                alert('الرجاء إدخال اسم المعلم الغائب والمعلم البديل');
+                return;
+            }
+
+            const tbody = document.getElementById('sub-table-body');
+            let row = `<tr>
+                <td>${absent}</td>
+                <td>${cls}</td>
+                <td>${sub}</td>
+                <td><span class="badge badge-success">مكتمل</span></td>
+            </tr>`;
+            tbody.innerHTML += row;
+
+            document.getElementById('absent-teacher').value = '';
+            document.getElementById('target-class').value = '';
+            document.getElementById('sub-teacher').value = '';
+
+            let currentCount = parseInt(document.getElementById('stat-subs').innerText);
+            document.getElementById('stat-subs').innerText = currentCount + 1;
+        }
+    </script>
+</body>
+</html>
