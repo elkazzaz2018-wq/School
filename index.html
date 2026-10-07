@@ -17,11 +17,11 @@
         /* تصميم الشاشة الافتتاحية */
         #splash-screen {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             background: linear-gradient(135deg, #0d6efd, #6f42c1);
             color: white; display: flex; justify-content: center; align-items: center;
-            flex-direction: column; z-index: 99999; transition: opacity 0.6s ease, visibility 0.6s ease;
-            text-align: center; padding: 20px;
+            flex-direction: column; z-index: 999999; text-align: center; padding: 20px;
+            transition: opacity 0.5s ease;
         }
         #splash-screen h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 15px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         #splash-screen p { font-size: 1.3rem; margin-bottom: 25px; opacity: 0.9; }
@@ -168,4 +168,492 @@
                         <div class="col-md-4"><label class="form-label">التحضير اليومي (من 20):</label><input type="number" id="v3" class="form-control" value="20" max="20" min="0"></div>
                         <div class="col-md-4"><label class="form-label">سجل 5 سلوك (من 20):</label><input type="number" id="v4" class="form-control" value="20" max="20" min="0"></div>
                         <div class="col-md-4"><label class="form-label">تقييم الطلاب (من 20):</label><input type="number" id="v5" class="form-control" value="20" max="20" min="0"></div>
-                        <div class="col-md-4"><label class="form-label">النظافة وقائمة الأسماء (من 20):</label><input type="number" id="v6" class="form-control
+                        <div class="col-md-4"><label class="form-label">النظافة وقائمة الأسماء (من 20):</label><input type="number" id="v6" class="form-control" value="20" max="20" min="0"></div>
+                    </div>
+                </div>
+                <button class="btn btn-primary w-100 fw-bold py-2" type="button" onclick="addVisit()">➕ حفظ تقييم المعلم</button>
+            </div>
+
+            <div class="card-box no-print">
+                <div class="row g-3">
+                    <div class="col-md-6"><button class="btn btn-outline-dark w-100" type="button" onclick="renderVisits(visits)">عرض كل السجلات</button></div>
+                    <div class="col-md-6"><button class="btn btn-outline-danger w-100 fw-bold" type="button" onclick="filterVisits()">⚠️ فلترة المعلمين المقصرين (&lt;70%)</button></div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">سجل التقييمات المحفوظة وإرسال التنبيهات:</h5>
+                    <button class="btn btn-outline-danger btn-sm no-print" type="button" onclick="exportVisitsPDF()">📥 تصدير PDF</button>
+                </div>
+                <table class="table table-bordered table-striped text-center align-middle">
+                    <thead class="table-dark"><tr><th>المعلم</th><th>المادة</th><th>الفصل</th><th>المجموع</th><th>الحالة</th><th class="no-print">إجراءات واتساب وحذف</th></tr></thead>
+                    <tbody id="visitsBody"><tr><td colspan="6" class="text-muted">لا توجد زيارات مسجلة.</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- جدول الاحتياط اليومي -->
+        <div class="tab-pane fade" id="tab-reserve" role="tabpanel">
+            <div class="card-box no-print">
+                <h4 class="mb-3 text-primary">توزيع حصص الاحتياط</h4>
+                <div class="row g-3">
+                    <div class="col-md-3"><select id="absentTeacherSelect" class="form-select"><option value="">-- اختر الغائب --</option></select></div>
+                    <div class="col-md-2"><input type="text" id="lessonNum" class="form-control" placeholder="رقم الحصة"></div>
+                    <div class="col-md-2"><input type="text" id="className" class="form-control" placeholder="الفصل"></div>
+                    <div class="col-md-3"><select id="reserveTeacherSelect" class="form-select"><option value="">-- اختر البديل --</option></select></div>
+                    <div class="col-md-2"><button class="btn btn-warning w-100 fw-bold" type="button" onclick="addReserve()">📌 إثبات</button></div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">جدول الاحتياط اليومي:</h5>
+                    <button class="btn btn-outline-danger btn-sm no-print" type="button" onclick="exportReservePDF()">📥 تصدير PDF</button>
+                </div>
+                <table class="table table-bordered text-center">
+                    <thead class="table-dark"><tr><th>الغائب</th><th>الحصة</th><th>الفصل</th><th>البديل</th><th class="no-print">إجراء</th></tr></thead>
+                    <tbody id="reserveBody"><tr><td colspan="5" class="text-muted">لا توجد حصص احتياط.</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- غياب الطلاب -->
+        <div class="tab-pane fade" id="tab-absence" role="tabpanel">
+            <div class="card-box no-print">
+                <h4 class="mb-3 text-primary">إحصائية غياب الطلاب اليومية</h4>
+                <div class="row g-3">
+                    <div class="col-md-4"><input type="text" id="classGrade" class="form-control" placeholder="الفصل"></div>
+                    <div class="col-md-3"><input type="number" id="totalStudents" class="form-control" placeholder="المقيد"></div>
+                    <div class="col-md-3"><input type="number" id="absentStudents" class="form-control" placeholder="الغياب"></div>
+                    <div class="col-md-2"><button class="btn btn-success w-100" type="button" onclick="addAbsence()">📊 تسجيل</button></div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">تقرير الغياب اليومي:</h5>
+                    <button class="btn btn-outline-danger btn-sm no-print" type="button" onclick="exportAbsencePDF()">📥 تصدير PDF</button>
+                </div>
+                <table class="table table-bordered text-center">
+                    <thead class="table-dark"><tr><th>الفصل</th><th>المقيد</th><th>الغائب</th><th>الحاضر</th><th>النسبة</th><th class="no-print">إجراء</th></tr></thead>
+                    <tbody id="absenceBody"><tr><td colspan="6" class="text-muted">لا توجد إحصائيات.</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- دفتر الأحوال -->
+        <div class="tab-pane fade" id="tab-notes" role="tabpanel">
+            <div class="card-box no-print">
+                <h4 class="mb-3 text-primary">تسجيل ملاحظة في دفتر الأحوال</h4>
+                <div class="mb-3"><textarea id="noteText" class="form-control" rows="3" placeholder="اكتب الملاحظة اليومية..."></textarea></div>
+                <button class="btn btn-dark w-100" type="button" onclick="addNote()">📥 تسجيل الملاحظة</button>
+            </div>
+
+            <div class="card-box">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">أحوال وملاحظات اليوم:</h5>
+                    <button class="btn btn-outline-danger btn-sm no-print" type="button" onclick="exportNotesPDF()">📥 تصدير PDF</button>
+                </div>
+                <ul class="list-group" id="notesList"><li class="list-group-item text-muted">لا توجد ملاحظات.</li></ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function enterApp() {
+        let splash = document.getElementById("splash-screen");
+        if (splash) {
+            splash.style.opacity = "0";
+            setTimeout(() => {
+                splash.remove(); // إزالة الشاشة من الصفحة نهائياً
+            }, 500);
+        }
+    }
+
+    let staffList = JSON.parse(localStorage.getItem("school_staff")) || [];
+    let visits = JSON.parse(localStorage.getItem("school_visits")) || [];
+    let reserves = JSON.parse(localStorage.getItem("school_reserves")) || [];
+    let absences = JSON.parse(localStorage.getItem("school_absences")) || [];
+    let notes = JSON.parse(localStorage.getItem("school_notes")) || [];
+
+    window.onload = function() {
+        refreshStaffUI();
+        renderVisits(visits);
+        renderReserves();
+        renderAbsences();
+        renderNotes();
+    };
+
+    function saveData() {
+        localStorage.setItem("school_staff", JSON.stringify(staffList));
+        localStorage.setItem("school_visits", JSON.stringify(visits));
+        localStorage.setItem("school_reserves", JSON.stringify(reserves));
+        localStorage.setItem("school_absences", JSON.stringify(absences));
+        localStorage.setItem("school_notes", JSON.stringify(notes));
+    }
+
+    function handleExcelUpload(e) {
+        let file = e.target.files[0];
+        if (!file) return;
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let data = new Uint8Array(e.target.result);
+            let workbook = XLSX.read(data, {type: 'array'});
+            let worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            let jsonRows = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+            
+            if (jsonRows.length <= 1) { alert("الملف فارغ!"); return; }
+            
+            staffList = jsonRows.slice(1).filter(row => row.some(c => c)).map(row => ({
+                name: row[0] || 'غير محدد',
+                code: row[1] || '-',
+                subject: row[2] || '-',
+                job: row[3] || '-',
+                nationalId: row[4] || '-',
+                phone: row[5] || ''
+            }));
+
+            saveData();
+            refreshStaffUI();
+            alert("تم رفع بيانات المعلمين بنجاح!");
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function saveManualTeacher() {
+        let name = document.getElementById("manualName").value;
+        let code = document.getElementById("manualCode").value;
+        let subject = document.getElementById("manualSubject").value;
+        let job = document.getElementById("manualJob").value;
+        let nationalId = document.getElementById("manualNationalId").value;
+        let phone = document.getElementById("manualPhone").value;
+        let editIdx = parseInt(document.getElementById("editIndex").value);
+
+        if(!name) { alert("أدخل اسم المعلم على الأقل!"); return; }
+
+        let teacherData = { name, code, subject, job, nationalId, phone };
+
+        if(editIdx === -1) {
+            staffList.push(teacherData);
+        } else {
+            staffList[editIdx] = teacherData;
+            document.getElementById("editIndex").value = "-1";
+        }
+
+        saveData();
+        refreshStaffUI();
+
+        document.getElementById("manualName").value = "";
+        document.getElementById("manualCode").value = "";
+        document.getElementById("manualSubject").value = "";
+        document.getElementById("manualJob").value = "";
+        document.getElementById("manualNationalId").value = "";
+        document.getElementById("manualPhone").value = "";
+    }
+
+    function editTeacher(index) {
+        let t = staffList[index];
+        document.getElementById("manualName").value = t.name;
+        document.getElementById("manualCode").value = t.code;
+        document.getElementById("manualSubject").value = t.subject;
+        document.getElementById("manualJob").value = t.job;
+        document.getElementById("manualNationalId").value = t.nationalId;
+        document.getElementById("manualPhone").value = t.phone;
+        document.getElementById("editIndex").value = index;
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function deleteTeacher(index) {
+        if(confirm("هل أنت متأكد من حذف هذا المعلم؟")) {
+            staffList.splice(index, 1);
+            saveData();
+            refreshStaffUI();
+        }
+    }
+
+    function refreshStaffUI() {
+        let tbody = document.getElementById("tableBody");
+        let visitSelect = document.getElementById("teacherSelectVisit");
+        let absentSelect = document.getElementById("absentTeacherSelect");
+        let reserveSelect = document.getElementById("reserveTeacherSelect");
+        
+        tbody.innerHTML = "";
+        visitSelect.innerHTML = `<option value="">-- اختر المعلم من القائمة --</option>`;
+        absentSelect.innerHTML = `<option value="">-- اختر الغائب --</option>`;
+        reserveSelect.innerHTML = `<option value="">-- اختر البديل --</option>`;
+
+        document.getElementById("rowCount").textContent = staffList.length;
+
+        if (staffList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" class="text-muted py-4">لا توجد بيانات مسجلة.</td></tr>`;
+            return;
+        }
+
+        staffList.forEach((t, i) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${t.name}</strong></td>
+                    <td>${t.code}</td>
+                    <td>${t.subject}</td>
+                    <td>${t.job}</td>
+                    <td>${t.nationalId}</td>
+                    <td>${t.phone || '-'}</td>
+                    <td class="no-print">
+                        <button class="btn btn-sm btn-primary" type="button" onclick="editTeacher(${i})">تعديل</button>
+                        <button class="btn btn-sm btn-danger" type="button" onclick="deleteTeacher(${i})">حذف</button>
+                    </td>
+                </tr>
+            `;
+
+            visitSelect.innerHTML += `<option value="${t.name}" data-subject="${t.subject}">${t.name} (${t.subject})</option>`;
+            absentSelect.innerHTML += `<option value="${t.name}">${t.name} (${t.subject})</option>`;
+            reserveSelect.innerHTML += `<option value="${t.name}">${t.name} (${t.subject})</option>`;
+        });
+
+        generateStatistics();
+    }
+
+    function onTeacherSelectChange() {
+        let select = document.getElementById("teacherSelectVisit");
+        let selectedOption = select.options[select.selectedIndex];
+        let subject = selectedOption.getAttribute("data-subject");
+        if(subject && subject !== '-') {
+            document.getElementById("subjectName").value = subject;
+        }
+    }
+
+    function searchTable() {
+        let query = document.getElementById("searchInput").value.toLowerCase();
+        let tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "";
+        let filtered = staffList.filter(t => t.name.toLowerCase().includes(query) || t.subject.toLowerCase().includes(query) || (t.phone && t.phone.includes(query)));
+        
+        if(filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" class="text-danger py-3">لا توجد نتائج مطابقة</td></tr>`;
+            return;
+        }
+
+        filtered.forEach((t, i) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${t.name}</strong></td>
+                    <td>${t.code}</td>
+                    <td>${t.subject}</td>
+                    <td>${t.job}</td>
+                    <td>${t.nationalId}</td>
+                    <td>${t.phone || '-'}</td>
+                    <td class="no-print"><button class="btn btn-sm btn-primary" type="button" onclick="editTeacher(${i})">تعديل</button></td>
+                </tr>
+            `;
+        });
+    }
+
+    function generateStatistics() {
+        let subjectsCount = {};
+        let jobsCount = {};
+        staffList.forEach(t => {
+            let subj = t.subject || "غير محدد";
+            let job = t.job || "غير محدد";
+            subjectsCount[subj] = (subjectsCount[subj] || 0) + 1;
+            jobsCount[job] = (jobsCount[job] || 0) + 1;
+        });
+
+        let subBody = document.getElementById("subjectsStatsBody");
+        subBody.innerHTML = Object.keys(subjectsCount).length === 0 ? `<tr><td colspan="2">لا توجد بيانات</td></tr>` : "";
+        for (let [s, c] of Object.entries(subjectsCount)) {
+            subBody.innerHTML += `<tr><td>${s}</td><td><span class="badge bg-primary fs-6">${c}</span></td></tr>`;
+        }
+
+        let jobBody = document.getElementById("jobsStatsBody");
+        jobBody.innerHTML = Object.keys(jobsCount).length === 0 ? `<tr><td colspan="2">لا توجد بيانات</td></tr>` : "";
+        for (let [j, c] of Object.entries(jobsCount)) {
+            jobBody.innerHTML += `<tr><td>${j}</td><td><span class="badge bg-success fs-6">${c}</span></td></tr>`;
+        }
+    }
+
+    function addVisit() {
+        let name = document.getElementById("teacherSelectVisit").value;
+        let subject = document.getElementById("subjectName").value;
+        let className = document.getElementById("classNameVisit").value;
+
+        let v1 = parseFloat(document.getElementById("v1").value) || 0;
+        let v2 = parseFloat(document.getElementById("v2").value) || 0;
+        let v3 = parseFloat(document.getElementById("v3").value) || 0;
+        let v4 = parseFloat(document.getElementById("v4").value) || 0;
+        let v5 = parseFloat(document.getElementById("v5").value) || 0;
+        let v6 = parseFloat(document.getElementById("v6").value) || 0;
+
+        if(!name || !subject || !className) { alert("اختر المعلم وأدخل المادة ورقم الفصل!"); return; }
+
+        let totalScore = v1 + v2 + v3 + v4 + v5 + v6;
+        let status = totalScore >= 85 ? "ممتاز (منضبط)" : (totalScore >= 70 ? "جيد جداً" : "⚠️ مقصر / يحتاج توجيه");
+        let badgeClass = totalScore >= 85 ? "bg-success" : (totalScore >= 70 ? "bg-primary" : "bg-danger");
+
+        visits.push({ name, subject, className, totalScore, status, badgeClass, details: {v1,v2,v3,v4,v5,v6} });
+        saveData();
+        renderVisits(visits);
+        alert("تم حفظ التقييم بنجاح!");
+    }
+
+    function renderVisits(dataList) {
+        let tbody = document.getElementById("visitsBody");
+        tbody.innerHTML = "";
+        if(dataList.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="text-muted">لا توجد زيارات مسجلة.</td></tr>`; return; }
+        
+        dataList.forEach((v, i) => {
+            let deficiencies = [];
+            if(v.details) {
+                if(v.details.v1 < 8) deficiencies.push("ختم دفتر التحضير");
+                if(v.details.v2 < 8) deficiencies.push("ترقيم دفتر التحضير");
+                if(v.details.v3 < 15) deficiencies.push("التحضير اليومي");
+                if(v.details.v4 < 15) deficiencies.push("سجل 5 سلوك");
+                if(v.details.v5 < 15) deficiencies.push("تقييم الطلاب");
+                if(v.details.v6 < 15) deficiencies.push("نظافة الفصل وقائمة الأسماء");
+            }
+
+            let teacherObj = staffList.find(t => t.name === v.name);
+            let phone = teacherObj ? teacherObj.phone : "";
+            let cleanPhone = phone ? phone.replace(/\D/g, '') : "";
+            if(cleanPhone && !cleanPhone.startsWith('2')) cleanPhone = '2' + cleanPhone;
+
+            let defText = deficiencies.length > 0 ? "البنود التي تحتاج إلى تدارك ودعم: " + deficiencies.join('، ') : "متابعة عامة للعملية التعليمية.";
+            let msg = `تحية طيبة الأستاذ/ة ${v.name}،\nبناءً على المتابعة الفنية اليومية لحصتك في مادة ${v.subject} (فصل ${v.className})، بلغ مجموع تقييمك ${v.totalScore}/100.\n${defText}\nرجاءً التكرم بالمتابعة وتلافي الملاحظات. تمنياتنا بالتوفيق الدائم.\n(إدارة المدرسة / أ. أميرة شلبي)`;
+            let encodedMsg = encodeURIComponent(msg);
+
+            let whatsappBtn = cleanPhone ? `<a href="https://wa.me/${cleanPhone}?text=${encodedMsg}" target="_blank" class="btn btn-sm btn-success mb-1">💬 إرسال واتساب</a>` : `<span class="text-muted small d-block">لا يوجد هاتف</span>`;
+
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${v.name}</strong></td>
+                    <td>${v.subject}</td>
+                    <td>${v.className}</td>
+                    <td><span class="fs-5 fw-bold">${v.totalScore} / 100</span></td>
+                    <td><span class="badge ${v.badgeClass} fs-6">${v.status}</span></td>
+                    <td class="no-print">
+                        ${whatsappBtn}
+                        <button class="btn btn-sm btn-danger" type="button" onclick="visits.splice(${i},1);saveData();renderVisits(visits);">حذف</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function filterVisits() {
+        let filtered = visits.filter(v => v.totalScore < 70);
+        renderVisits(filtered);
+    }
+
+    function addReserve() {
+        let absentTeacher = document.getElementById("absentTeacherSelect").value;
+        let lessonNum = document.getElementById("lessonNum").value;
+        let className = document.getElementById("className").value;
+        let reserveTeacher = document.getElementById("reserveTeacherSelect").value;
+
+        if(!absentTeacher || !lessonNum || !className || !reserveTeacher) { alert("استكمل بيانات الاحتياط!"); return; }
+        reserves.push({ absentTeacher, lessonNum, className, reserveTeacher });
+        saveData();
+        renderReserves();
+    }
+    function renderReserves() {
+        let tbody = document.getElementById("reserveBody");
+        tbody.innerHTML = reserves.length === 0 ? `<tr><td colspan="5" class="text-muted">لا توجد حصص احتياط.</td></tr>` : 
+            reserves.map((r, i) => `<tr><td>${r.absentTeacher}</td><td>${r.lessonNum}</td><td>${r.className}</td><td><span class="badge bg-warning text-dark">${r.reserveTeacher}</span></td><td class="no-print"><button class="btn btn-sm btn-danger" type="button" onclick="reserves.splice(${i},1);saveData();renderReserves();">حذف</button></td></tr>`).join('');
+    }
+
+    function addAbsence() {
+        let classGrade = document.getElementById("classGrade").value;
+        let total = parseInt(document.getElementById("totalStudents").value);
+        let absent = parseInt(document.getElementById("absentStudents").value);
+        if(!classGrade || isNaN(total) || isNaN(absent)) { alert("أدخل بيانات صحيحة للغياب!"); return; }
+        let present = total - absent;
+        let percentage = ((absent / total) * 100).toFixed(1) + "%";
+        absences.push({ classGrade, total, absent, present, percentage });
+        saveData();
+        renderAbsences();
+    }
+    function renderAbsences() {
+        let tbody = document.getElementById("absenceBody");
+        tbody.innerHTML = absences.length === 0 ? `<tr><td colspan="6" class="text-muted">لا توجد إحصائيات.</td></tr>` : 
+            absences.map((a, i) => `<tr><td>${a.classGrade}</td><td>${a.total}</td><td>${a.absent}</td><td>${a.present}</td><td><span class="badge bg-danger">${a.percentage}</span></td><td class="no-print"><button class="btn btn-sm btn-danger" type="button" onclick="absences.splice(${i},1);saveData();renderAbsences();">حذف</button></td></tr>`).join('');
+    }
+
+    function addNote() {
+        let text = document.getElementById("noteText").value;
+        let timeNow = new Date().toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
+        if(!text) { alert("أدخل الملاحظة!"); return; }
+        notes.push({ text, timeNow });
+        saveData();
+        renderNotes();
+        document.getElementById("noteText").value = "";
+    }
+    function renderNotes() {
+        let list = document.getElementById("notesList");
+        list.innerHTML = notes.length === 0 ? `<li class="list-group-item text-muted">لا توجد ملاحظات.</li>` : 
+            notes.map((n, i) => `<li class="list-group-item d-flex justify-content-between align-items-center"><div><strong>[${n.timeNow}]</strong> ${n.text}</div><button class="btn btn-sm btn-outline-danger no-print" type="button" onclick="notes.splice(${i},1);saveData();renderNotes();">حذف</button></li>`).join('');
+    }
+
+    function exportStaffPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.text("School Staff Database", 20, 20);
+        let y = 35;
+        staffList.forEach((t, i) => {
+            doc.text(`${i+1}. ${t.name} - ${t.subject} - Tel: ${t.phone}`, 20, y);
+            y += 10;
+        });
+        doc.save("Staff.pdf");
+    }
+    function exportVisitsPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.text("Teacher Evaluation Report", 20, 20);
+        let y = 35;
+        visits.forEach((v, i) => {
+            doc.text(`${i+1}. ${v.name} | ${v.subject} | ${v.totalScore}/100 | ${v.status}`, 20, y);
+            y += 10;
+        });
+        doc.save("Visits.pdf");
+    }
+    function exportReservePDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.text("Reserve Schedule Report", 20, 20);
+        let y = 35;
+        reserves.forEach((r, i) => {
+            doc.text(`${i+1}. Absent: ${r.absentTeacher} | Lesson: ${r.lessonNum} | Substitute: ${r.reserveTeacher}`, 20, y);
+            y += 10;
+        });
+        doc.save("Reserve.pdf");
+    }
+    function exportAbsencePDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.text("Absence Report", 20, 20);
+        let y = 35;
+        absences.forEach((a, i) => {
+            doc.text(`${i+1}. Class: ${a.classGrade} | Rate: ${a.percentage}`, 20, y);
+            y += 10;
+        });
+        doc.save("Absence.pdf");
+    }
+    function exportNotesPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.text("School Log", 20, 20);
+        let y = 35;
+        notes.forEach((n, i) => {
+            doc.text(`${i+1}. [${n.timeNow}] ${n.text}`, 20, y);
+            y += 10;
+        });
+        doc.save("Notes.pdf");
+    }
+</script>
+
+</body>
+</html>
