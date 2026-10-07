@@ -20,12 +20,12 @@
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #0d6efd, #6f42c1);
             color: white; display: flex; justify-content: center; align-items: center;
-            flex-direction: column; z-index: 9999; transition: opacity 0.8s ease, visibility 0.8s ease;
+            flex-direction: column; z-index: 99999; transition: opacity 0.6s ease, visibility 0.6s ease;
             text-align: center; padding: 20px;
         }
         #splash-screen h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 15px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         #splash-screen p { font-size: 1.3rem; margin-bottom: 25px; opacity: 0.9; }
-        .enter-btn { background-color: #fff; color: #0d6efd; font-weight: bold; padding: 12px 35px; border-radius: 30px; border: none; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; }
+        .enter-btn { background-color: #fff; color: #0d6efd; font-weight: bold; padding: 12px 35px; border-radius: 30px; border: none; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; transition: 0.3s; }
         .enter-btn:hover { background-color: #f8f9fa; transform: scale(1.05); }
 
         .header-box { background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -49,7 +49,7 @@
         <span style="font-size: 4rem;">💐</span>
         <h1 class="mt-3">إهداء إلى زوجتي الغالية</h1>
         <p>أ/ أميرة شلبي.. رفيقـة الدرب وسند النجاح</p>
-        <button class="enter-btn" onclick="enterApp()">دخول البوابة الإدارية 🚀</button>
+        <button class="enter-btn" type="button" onclick="enterApp()">دخول البوابة الإدارية 🚀</button>
     </div>
 </div>
 
@@ -89,7 +89,7 @@
                     <div class="col-md-3"><input type="text" id="manualJob" class="form-control" placeholder="الوظيفة"></div>
                     <div class="col-md-3"><input type="text" id="manualNationalId" class="form-control" placeholder="الرقم القومي (14 رقم)"></div>
                     <div class="col-md-3"><input type="text" id="manualPhone" class="form-control" placeholder="رقم الهاتف (واتساب)"></div>
-                    <div class="col-md-2"><button class="btn btn-success w-100 fw-bold" onclick="saveManualTeacher()">حفظ المعلم</button></div>
+                    <div class="col-md-2"><button class="btn btn-success w-100 fw-bold" type="button" onclick="saveManualTeacher()">حفظ المعلم</button></div>
                 </div>
             </div>
 
@@ -102,10 +102,10 @@
                         <span class="badge bg-secondary p-2 fs-6 w-100">إجمالي المعلمين: <span id="rowCount">0</span></span>
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-success w-100" onclick="window.print()">🖨️ طباعة</button>
+                        <button class="btn btn-success w-100" type="button" onclick="window.print()">🖨️ طباعة</button>
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-danger w-100" onclick="exportStaffPDF()">📥 حفظ PDF</button>
+                        <button class="btn btn-danger w-100" type="button" onclick="exportStaffPDF()">📥 حفظ PDF</button>
                     </div>
                 </div>
             </div>
@@ -143,3 +143,29 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- متابعة المعلمين -->
+        <div class="tab-pane fade" id="tab-visits" role="tabpanel">
+            <div class="card-box no-print">
+                <h4 class="mb-3 text-primary">📋 تقييم ومتابعة المعلم داخل الفصل</h4>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <select id="teacherSelectVisit" class="form-select" onchange="onTeacherSelectChange()">
+                            <option value="">-- اختر المعلم من القائمة --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4"><input type="text" id="subjectName" class="form-control" placeholder="المادة / الحصة"></div>
+                    <div class="col-md-4"><input type="text" id="classNameVisit" class="form-control" placeholder="رقم / اسم الفصل"></div>
+                </div>
+
+                <div class="checklist-box">
+                    <h5 class="text-secondary mb-3">بنود المتابعة والدرجات (الدرجة القصوى):</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4"><label class="form-label">ختم دفتر التحضير (من 10):</label><input type="number" id="v1" class="form-control" value="10" max="10" min="0"></div>
+                        <div class="col-md-4"><label class="form-label">ترقيم دفتر التحضير (من 10):</label><input type="number" id="v2" class="form-control" value="10" max="10" min="0"></div>
+                        <div class="col-md-4"><label class="form-label">التحضير اليومي (من 20):</label><input type="number" id="v3" class="form-control" value="20" max="20" min="0"></div>
+                        <div class="col-md-4"><label class="form-label">سجل 5 سلوك (من 20):</label><input type="number" id="v4" class="form-control" value="20" max="20" min="0"></div>
+                        <div class="col-md-4"><label class="form-label">تقييم الطلاب (من 20):</label><input type="number" id="v5" class="form-control" value="20" max="20" min="0"></div>
+                        <div class="col-md-4"><label class="form-label">النظافة وقائمة الأسماء (من 20):</label><input type="number" id="v6" class="form-control
