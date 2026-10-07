@@ -73,10 +73,10 @@
     <!-- محتوى الأقسام -->
     <div class="tab-content" id="pills-tabContent">
         
-        <!-- القسم الأول: قاعدة بيانات العاملين وإضافة/تعديل معلم -->
+        <!-- القسم الأول: قاعدة بيانات العاملين -->
         <div class="tab-pane fade show active" id="tab-staff" role="tabpanel">
             <div class="card-box text-center no-print">
-                <label for="excelFile" class="form-label fw-bold mb-2">📁 رفع ملف إكسل العاملين (.xlsx) أو استيراده:</label>
+                <label for="excelFile" class="form-label fw-bold mb-2">📁 رفع ملف إكسل العاملين (.xlsx) (الترتيب: الاسم، الكود، المادة، الوظيفة، الرقم القومي، الهاتف):</label>
                 <input type="file" id="excelFile" class="form-control form-control-lg w-75 mx-auto mb-3" accept=".xlsx, .xls, .csv" onchange="handleExcelUpload(event)">
                 
                 <hr>
@@ -84,9 +84,11 @@
                 <div class="row g-2 justify-content-center">
                     <input type="hidden" id="editIndex" value="-1">
                     <div class="col-md-3"><input type="text" id="manualName" class="form-control" placeholder="اسم المعلم الرباعي"></div>
-                    <div class="col-md-2"><input type="text" id="manualCode" class="form-control" placeholder="الكود الوظيقي"></div>
-                    <div class="col-md-3"><input type="text" id="manualSubject" class="form-control" placeholder="المادة / التخصص"></div>
-                    <div class="col-md-2"><input type="text" id="manualJob" class="form-control" placeholder="الوظيفة / الدرجة"></div>
+                    <div class="col-md-2"><input type="text" id="manualCode" class="form-control" placeholder="الكود"></div>
+                    <div class="col-md-2"><input type="text" id="manualSubject" class="form-control" placeholder="المادة / التخصص"></div>
+                    <div class="col-md-3"><input type="text" id="manualJob" class="form-control" placeholder="الوظيفة"></div>
+                    <div class="col-md-3"><input type="text" id="manualNationalId" class="form-control" placeholder="الرقم القومي (14 رقم)"></div>
+                    <div class="col-md-3"><input type="text" id="manualPhone" class="form-control" placeholder="رقم الهاتف (واتساب)"></div>
                     <div class="col-md-2"><button class="btn btn-success w-100 fw-bold" onclick="saveManualTeacher()">حفظ المعلم</button></div>
                 </div>
             </div>
@@ -94,7 +96,7 @@
             <div class="card-box no-print">
                 <div class="row g-3 align-items-center">
                     <div class="col-md-5">
-                        <input type="text" id="searchInput" class="form-control" placeholder="🔍 ابحث بالاسم، الكود، الوظيفة..." onkeyup="searchTable()">
+                        <input type="text" id="searchInput" class="form-control" placeholder="🔍 ابحث بالاسم، الكود، التخصص، أو الهاتف..." onkeyup="searchTable()">
                     </div>
                     <div class="col-md-3 text-center">
                         <span class="badge bg-secondary p-2 fs-6 w-100">إجمالي المعلمين: <span id="rowCount">0</span></span>
@@ -111,10 +113,10 @@
             <div class="table-container table-responsive">
                 <table class="table table-striped table-hover align-middle text-center" id="excelTable">
                     <thead id="tableHead">
-                        <tr><th>الاسم</th><th>الكود</th><th>المادة</th><th>الوظيفة</th><th class="no-print">إجراءات التعديل</th></tr>
+                        <tr><th>الاسم</th><th>الكود</th><th>المادة</th><th>الوظيفة</th><th>الرقم القومي</th><th>الهاتف</th><th class="no-print">إجراءات</th></tr>
                     </thead>
                     <tbody id="tableBody">
-                        <tr><td colspan="5" class="text-muted py-4">قم برفع ملف إكسل أو إضافة المعلمين يدوياً لتظهر البيانات هنا وتُحفظ تلقائياً.</td></tr>
+                        <tr><td colspan="7" class="text-muted py-4">قم برفع ملف إكسل أو إضافة المعلمين يدوياً لتظهر البيانات هنا.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -128,7 +130,7 @@
                         <h4 class="mb-3 text-primary">📊 إحصائية التخصصات والمواد</h4>
                         <table class="table table-bordered text-center">
                             <thead class="table-dark"><tr><th>المادة / التخصص</th><th>عدد المعلمين</th></tr></thead>
-                            <tbody id="subjectsStatsBody"><tr><td colspan="2" class="text-muted">لا توجد بيانات كافية.</td></tr></tbody>
+                            <tbody id="subjectsStatsBody"><tr><td colspan="2" class="text-muted">لا توجد بيانات.</td></tr></tbody>
                         </table>
                     </div>
                 </div>
@@ -137,489 +139,7 @@
                         <h4 class="mb-3 text-primary">📑 إحصائية الوظائف والألقاب</h4>
                         <table class="table table-bordered text-center">
                             <thead class="table-dark"><tr><th>الوظيفة / الدرجة</th><th>العدد</th></tr></thead>
-                            <tbody id="jobsStatsBody"><tr><td colspan="2" class="text-muted">لا توجد بيانات كافية.</td></tr></tbody>
+                            <tbody id="jobsStatsBody"><tr><td colspan="2" class="text-muted">لا توجد بيانات.</td></tr></tbody>
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- متابعة المعلمين (سحب الأسماء من القائمة) -->
-        <div class="tab-pane fade" id="tab-visits" role="tabpanel">
-            <div class="card-box no-print">
-                <h4 class="mb-3 text-primary">📋 تقييم ومتابعة المعلم داخل الفصل</h4>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-4">
-                        <select id="teacherSelectVisit" class="form-select">
-                            <option value="">-- اختر المعلم من القائمة --</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" id="subjectName" class="form-control" placeholder="المادة / الحصة">
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" id="classNameVisit" class="form-control" placeholder="رقم / اسم الفصل">
-                    </div>
-                </div>
-
-                <div class="checklist-box">
-                    <h5 class="text-secondary mb-3">بنود المتابعة والدرجات:</h5>
-                    <div class="row g-3">
-                        <div class="col-md-4"><label class="form-label">ختم دفتر التحضير (من 10):</label><input type="number" id="v1" class="form-control" value="10"></div>
-                        <div class="col-md-4"><label class="form-label">ترقيم دفتر التحضير (من 10):</label><input type="number" id="v2" class="form-control" value="10"></div>
-                        <div class="col-md-4"><label class="form-label">التحضير اليومي (من 20):</label><input type="number" id="v3" class="form-control" value="20"></div>
-                        <div class="col-md-4"><label class="form-label">سجل 5 سلوك (من 20):</label><input type="number" id="v4" class="form-control" value="20"></div>
-                        <div class="col-md-4"><label class="form-label">تقييم الطلاب (من 20):</label><input type="number" id="v5" class="form-control" value="20"></div>
-                        <div class="col-md-4"><label class="form-label">النظافة وقائمة الأسماء (من 20):</label><input type="number" id="v6" class="form-control" value="20"></div>
-                    </div>
-                </div>
-                <button class="btn btn-primary w-100 fw-bold py-2" onclick="addVisit()">➕ حفظ تقييم المعلم</button>
-            </div>
-
-            <div class="card-box no-print">
-                <div class="row g-3">
-                    <div class="col-md-6"><button class="btn btn-outline-dark w-100" onclick="renderVisits(visits)">عرض كل السجلات</button></div>
-                    <div class="col-md-6"><button class="btn btn-outline-danger w-100 fw-bold" onclick="filterVisits()">⚠️ فلترة المعلمين المقصرين (&lt;70%)</button></div>
-                </div>
-            </div>
-
-            <div class="table-container">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="mb-0">سجل التقييمات المحفوظة:</h5>
-                    <button class="btn btn-outline-danger btn-sm no-print" onclick="exportVisitsPDF()">📥 تصدير PDF</button>
-                </div>
-                <table class="table table-bordered table-striped text-center align-middle">
-                    <thead class="table-dark"><tr><th>المعلم</th><th>المادة</th><th>الفصل</th><th>المجموع</th><th>الحالة</th><th class="no-print">إجراء</th></tr></thead>
-                    <tbody id="visitsBody"><tr><td colspan="6" class="text-muted">لا توجد زيارات مسجلة.</td></tr></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- جدول الاحتياط اليومي -->
-        <div class="tab-pane fade" id="tab-reserve" role="tabpanel">
-            <div class="card-box no-print">
-                <h4 class="mb-3 text-primary">توزيع حصص الاحتياط</h4>
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <select id="absentTeacherSelect" class="form-select"><option value="">-- اختر المعلم الغائب --</option></select>
-                    </div>
-                    <div class="col-md-2"><input type="text" id="lessonNum" class="form-control" placeholder="رقم الحصة"></div>
-                    <div class="col-md-2"><input type="text" id="className" class="form-control" placeholder="الفصل"></div>
-                    <div class="col-md-3">
-                        <select id="reserveTeacherSelect" class="form-select"><option value="">-- اختر المعلم البديل --</option></select>
-                    </div>
-                    <div class="col-md-2"><button class="btn btn-warning w-100 fw-bold" onclick="addReserve()">📌 إثبات</button></div>
-                </div>
-            </div>
-
-            <div class="table-container">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="mb-0">جدول الاحتياط اليومي:</h5>
-                    <button class="btn btn-outline-danger btn-sm no-print" onclick="exportReservePDF()">📥 تصدير PDF</button>
-                </div>
-                <table class="table table-bordered text-center">
-                    <thead class="table-dark"><tr><th>المعلم الغائب</th><th>الحصة</th><th>الفصل</th><th>المعلم البديل</th><th class="no-print">إجراء</th></tr></thead>
-                    <tbody id="reserveBody"><tr><td colspan="5" class="text-muted">لا توجد حصص احتياط.</td></tr></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- متابعة غياب الطلاب -->
-        <div class="tab-pane fade" id="tab-absence" role="tabpanel">
-            <div class="card-box no-print">
-                <h4 class="mb-3 text-primary">إحصائية غياب الطلاب اليومية</h4>
-                <div class="row g-3">
-                    <div class="col-md-4"><input type="text" id="classGrade" class="form-control" placeholder="اسم أو رقم الفصل"></div>
-                    <div class="col-md-3"><input type="number" id="totalStudents" class="form-control" placeholder="إجمالي المقيد"></div>
-                    <div class="col-md-3"><input type="number" id="absentStudents" class="form-control" placeholder="عدد الغياب"></div>
-                    <div class="col-md-2"><button class="btn btn-success w-100" onclick="addAbsence()">📊 تسجيل</button></div>
-                </div>
-            </div>
-
-            <div class="table-container">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="mb-0">تقرير الغياب اليومي:</h5>
-                    <button class="btn btn-outline-danger btn-sm no-print" onclick="exportAbsencePDF()">📥 تصدير PDF</button>
-                </div>
-                <table class="table table-bordered text-center">
-                    <thead class="table-dark"><tr><th>الفصل</th><th>المقيد</th><th>الغائب</th><th>الحاضر</th><th>النسبة</th><th class="no-print">إجراء</th></tr></thead>
-                    <tbody id="absenceBody"><tr><td colspan="6" class="text-muted">لا توجد إحصائيات.</td></tr></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- دفتر الأحوال -->
-        <div class="tab-pane fade" id="tab-notes" role="tabpanel">
-            <div class="card-box no-print">
-                <h4 class="mb-3 text-primary">تسجيل ملاحظة في دفتر الأحوال</h4>
-                <div class="mb-3"><textarea id="noteText" class="form-control" rows="3" placeholder="اكتب الملاحظة اليومية..."></textarea></div>
-                <button class="btn btn-dark w-100" onclick="addNote()">📥 تسجيل الملاحظة</button>
-            </div>
-
-            <div class="card-box">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="mb-0">أحوال وملاحظات اليوم:</h5>
-                    <button class="btn btn-outline-danger btn-sm no-print" onclick="exportNotesPDF()">📥 تصدير PDF</button>
-                </div>
-                <ul class="list-group" id="notesList"><li class="list-group-item text-muted">لا توجد ملاحظات.</li></ul>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-    function enterApp() {
-        let splash = document.getElementById("splash-screen");
-        splash.style.opacity = "0";
-        splash.style.visibility = "hidden";
-    }
-
-    // --- البيانات والمتغيرات مع الحفظ التلقائي LocalStorage ---
-    let staffList = JSON.parse(localStorage.getItem("school_staff")) || [];
-    let visits = JSON.parse(localStorage.getItem("school_visits")) || [];
-    let reserves = JSON.parse(localStorage.getItem("school_reserves")) || [];
-    let absences = JSON.parse(localStorage.getItem("school_absences")) || [];
-    let notes = JSON.parse(localStorage.getItem("school_notes")) || [];
-
-    window.onload = function() {
-        refreshStaffUI();
-        renderVisits(visits);
-        renderReserves();
-        renderAbsences();
-        renderNotes();
-    };
-
-    function saveData() {
-        localStorage.setItem("school_staff", JSON.stringify(staffList));
-        localStorage.setItem("school_visits", JSON.stringify(visits));
-        localStorage.setItem("school_reserves", JSON.stringify(reserves));
-        localStorage.setItem("school_absences", JSON.stringify(absences));
-        localStorage.setItem("school_notes", JSON.stringify(notes));
-    }
-
-    // --- إدارة المعلمين (إضافة، تعديل، رفع إكسل) ---
-    function handleExcelUpload(e) {
-        let file = e.target.files[0];
-        if (!file) return;
-        let reader = new FileReader();
-        reader.onload = function(e) {
-            let data = new Uint8Array(e.target.result);
-            let workbook = XLSX.read(data, {type: 'array'});
-            let worksheet = workbook.Sheets[workbook.SheetNames[0]];
-            let jsonRows = XLSX.utils.sheet_to_json(worksheet, {header: 1});
-            
-            if (jsonRows.length <= 1) { alert("الملف فارغ!"); return; }
-            
-            // تحويل الصفوف إلى كائنات
-            staffList = jsonRows.slice(1).filter(row => row.some(c => c)).map(row => ({
-                name: row[0] || 'غير محدد',
-                code: row[1] || '-',
-                subject: row[2] || '-',
-                job: row[3] || '-'
-            }));
-
-            saveData();
-            refreshStaffUI();
-            alert("تم رفع وترتيب المعلمين بنجاح وحفظهم!");
-        };
-        reader.readAsArrayBuffer(file);
-    }
-
-    function saveManualTeacher() {
-        let name = document.getElementById("manualName").value;
-        let code = document.getElementById("manualCode").value;
-        let subject = document.getElementById("manualSubject").value;
-        let job = document.getElementById("manualJob").value;
-        let editIdx = parseInt(document.getElementById("editIndex").value);
-
-        if(!name) { alert("أدخل اسم المعلم على الأقل!"); return; }
-
-        if(editIdx === -1) {
-            staffList.push({name, code, subject, job});
-        } else {
-            staffList[editIdx] = {name, code, subject, job};
-            document.getElementById("editIndex").value = "-1";
-        }
-
-        saveData();
-        refreshStaffUI();
-
-        // تفريغ الحقول
-        document.getElementById("manualName").value = "";
-        document.getElementById("manualCode").value = "";
-        document.getElementById("manualSubject").value = "";
-        document.getElementById("manualJob").value = "";
-    }
-
-    function editTeacher(index) {
-        let t = staffList[index];
-        document.getElementById("manualName").value = t.name;
-        document.getElementById("manualCode").value = t.code;
-        document.getElementById("manualSubject").value = t.subject;
-        document.getElementById("manualJob").value = t.job;
-        document.getElementById("editIndex").value = index;
-        window.scrollTo({top: 0, behavior: 'smooth'});
-    }
-
-    function deleteTeacher(index) {
-        if(confirm("هل أنت متأكد من حذف هذا المعلم؟")) {
-            staffList.splice(index, 1);
-            saveData();
-            refreshStaffUI();
-        }
-    }
-
-    function refreshStaffUI() {
-        let tbody = document.getElementById("tableBody");
-        let visitSelect = document.getElementById("teacherSelectVisit");
-        let absentSelect = document.getElementById("absentTeacherSelect");
-        let reserveSelect = document.getElementById("reserveTeacherSelect");
-        
-        tbody.innerHTML = "";
-        visitSelect.innerHTML = `<option value="">-- اختر المعلم من القائمة --</option>`;
-        absentSelect.innerHTML = `<option value="">-- اختر المعلم الغائب --</option>`;
-        reserveSelect.innerHTML = `<option value="">-- اختر المعلم البديل --</option>`;
-
-        document.getElementById("rowCount").textContent = staffList.length;
-
-        if (staffList.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" class="text-muted py-4">لا توجد بيانات مسجلة. قم برفع إكسل أو إضافة معلم.</td></tr>`;
-            return;
-        }
-
-        staffList.forEach((t, i) => {
-            tbody.innerHTML += `
-                <tr>
-                    <td><strong>${t.name}</strong></td>
-                    <td>${t.code}</td>
-                    <td>${t.subject}</td>
-                    <td>${t.job}</td>
-                    <td class="no-print">
-                        <button class="btn btn-sm btn-primary" onclick="editTeacher(${i})">تعديل</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteTeacher(${i})">حذف</button>
-                    </td>
-                </tr>
-            `;
-
-            visitSelect.innerHTML += `<option value="${t.name}">${t.name} (${t.subject})</option>`;
-            absentSelect.innerHTML += `<option value="${t.name}">${t.name} (${t.subject})</option>`;
-            reserveSelect.innerHTML += `<option value="${t.name}">${t.name} (${t.subject})</option>`;
-        });
-
-        generateStatistics();
-    }
-
-    function searchTable() {
-        let query = document.getElementById("searchInput").value.toLowerCase();
-        let tbody = document.getElementById("tableBody");
-        tbody.innerHTML = "";
-        let filtered = staffList.filter(t => t.name.toLowerCase().includes(query) || t.subject.toLowerCase().includes(query) || t.job.toLowerCase().includes(query));
-        
-        if(filtered.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" class="text-danger py-3">لا توجد نتائج مطابقة</td></tr>`;
-            return;
-        }
-
-        filtered.forEach((t, i) => {
-            tbody.innerHTML += `
-                <tr>
-                    <td><strong>${t.name}</strong></td>
-                    <td>${t.code}</td>
-                    <td>${t.subject}</td>
-                    <td>${t.job}</td>
-                    <td class="no-print"><button class="btn btn-sm btn-primary" onclick="editTeacher(${i})">تعديل</button></td>
-                </tr>
-            `;
-        });
-    }
-
-    function generateStatistics() {
-        let subjectsCount = {};
-        let jobsCount = {};
-        staffList.forEach(t => {
-            let subj = t.subject || "غير محدد";
-            let job = t.job || "غير محدد";
-            subjectsCount[subj] = (subjectsCount[subj] || 0) + 1;
-            jobsCount[job] = (jobsCount[job] || 0) + 1;
-        });
-
-        let subBody = document.getElementById("subjectsStatsBody");
-        subBody.innerHTML = Object.keys(subjectsCount).length === 0 ? `<tr><td colspan="2">لا توجد بيانات</td></tr>` : "";
-        for (let [s, c] of Object.entries(subjectsCount)) {
-            subBody.innerHTML += `<tr><td>${s}</td><td><span class="badge bg-primary fs-6">${c}</span></td></tr>`;
-        }
-
-        let jobBody = document.getElementById("jobsStatsBody");
-        jobBody.innerHTML = Object.keys(jobsCount).length === 0 ? `<tr><td colspan="2">لا توجد بيانات</td></tr>` : "";
-        for (let [j, c] of Object.entries(jobsCount)) {
-            jobBody.innerHTML += `<tr><td>${j}</td><td><span class="badge bg-success fs-6">${c}</span></td></tr>`;
-        }
-    }
-
-    // --- الزيارات والتقييم ---
-    function addVisit() {
-        let name = document.getElementById("teacherSelectVisit").value;
-        let subject = document.getElementById("subjectName").value;
-        let className = document.getElementById("classNameVisit").value;
-
-        let v1 = parseFloat(document.getElementById("v1").value) || 0;
-        let v2 = parseFloat(document.getElementById("v2").value) || 0;
-        let v3 = parseFloat(document.getElementById("v3").value) || 0;
-        let v4 = parseFloat(document.getElementById("v4").value) || 0;
-        let v5 = parseFloat(document.getElementById("v5").value) || 0;
-        let v6 = parseFloat(document.getElementById("v6").value) || 0;
-
-        if(!name || !subject || !className) { alert("اختر المعلم وأدخل المادة ورقم الفصل!"); return; }
-
-        let totalScore = v1 + v2 + v3 + v4 + v5 + v6;
-        let status = totalScore >= 85 ? "ممتاز (منضبط)" : (totalScore >= 70 ? "جيد جداً" : "⚠️ مقصر / يحتاج توجيه");
-        let badgeClass = totalScore >= 85 ? "bg-success" : (totalScore >= 70 ? "bg-primary" : "bg-danger");
-
-        visits.push({ name, subject, className, totalScore, status, badgeClass });
-        saveData();
-        renderVisits(visits);
-        alert("تم حفظ التقييم بنجاح!");
-    }
-
-    function renderVisits(dataList) {
-        let tbody = document.getElementById("visitsBody");
-        tbody.innerHTML = "";
-        if(dataList.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="text-muted">لا توجد زيارات مسجلة.</td></tr>`; return; }
-        dataList.forEach((v, i) => {
-            tbody.innerHTML += `
-                <tr>
-                    <td><strong>${v.name}</strong></td>
-                    <td>${v.subject}</td>
-                    <td>${v.className}</td>
-                    <td><span class="fs-5 fw-bold">${v.totalScore} / 100</span></td>
-                    <td><span class="badge ${v.badgeClass} fs-6">${v.status}</span></td>
-                    <td class="no-print"><button class="btn btn-sm btn-danger" onclick="visits.splice(${i},1);saveData();renderVisits(visits);">حذف</button></td>
-                </tr>
-            `;
-        });
-    }
-
-    function filterVisits() {
-        let filtered = visits.filter(v => v.totalScore < 70);
-        renderVisits(filtered);
-    }
-
-    // --- الاحتياط ---
-    function addReserve() {
-        let absentTeacher = document.getElementById("absentTeacherSelect").value;
-        let lessonNum = document.getElementById("lessonNum").value;
-        let className = document.getElementById("className").value;
-        let reserveTeacher = document.getElementById("reserveTeacherSelect").value;
-
-        if(!absentTeacher || !lessonNum || !className || !reserveTeacher) { alert("اختر المعلم الغائب والبديل واستكمل البيانات!"); return; }
-        reserves.push({ absentTeacher, lessonNum, className, reserveTeacher });
-        saveData();
-        renderReserves();
-    }
-
-    function renderReserves() {
-        let tbody = document.getElementById("reserveBody");
-        tbody.innerHTML = reserves.length === 0 ? `<tr><td colspan="5" class="text-muted">لا توجد حصص احتياط.</td></tr>` : 
-            reserves.map((r, i) => `<tr><td>${r.absentTeacher}</td><td>${r.lessonNum}</td><td>${r.className}</td><td><span class="badge bg-warning text-dark">${r.reserveTeacher}</span></td><td class="no-print"><button class="btn btn-sm btn-danger" onclick="reserves.splice(${i},1);saveData();renderReserves();">حذف</button></td></tr>`).join('');
-    }
-
-    // --- غياب الطلاب ---
-    function addAbsence() {
-        let classGrade = document.getElementById("classGrade").value;
-        let total = parseInt(document.getElementById("totalStudents").value);
-        let absent = parseInt(document.getElementById("absentStudents").value);
-        if(!classGrade || isNaN(total) || isNaN(absent)) { alert("أدخل بيانات صحيحة للغياب!"); return; }
-        let present = total - absent;
-        let percentage = ((absent / total) * 100).toFixed(1) + "%";
-        absences.push({ classGrade, total, absent, present, percentage });
-        saveData();
-        renderAbsences();
-    }
-
-    function renderAbsences() {
-        let tbody = document.getElementById("absenceBody");
-        tbody.innerHTML = absences.length === 0 ? `<tr><td colspan="6" class="text-muted">لا توجد إحصائيات غياب.</td></tr>` : 
-            absences.map((a, i) => `<tr><td>${a.classGrade}</td><td>${a.total}</td><td>${a.absent}</td><td>${a.present}</td><td><span class="badge bg-danger">${a.percentage}</span></td><td class="no-print"><button class="btn btn-sm btn-danger" onclick="absences.splice(${i},1);saveData();renderAbsences();">حذف</button></td></tr>`).join('');
-    }
-
-    // --- دفتر الأحوال ---
-    function addNote() {
-        let text = document.getElementById("noteText").value;
-        let timeNow = new Date().toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
-        if(!text) { alert("أدخل نص الملاحظة!"); return; }
-        notes.push({ text, timeNow });
-        saveData();
-        renderNotes();
-        document.getElementById("noteText").value = "";
-    }
-
-    function renderNotes() {
-        let list = document.getElementById("notesList");
-        list.innerHTML = notes.length === 0 ? `<li class="list-group-item text-muted">لا توجد ملاحظات.</li>` : 
-            notes.map((n, i) => `<li class="list-group-item d-flex justify-content-between align-items-center"><div><strong>[${n.timeNow}]</strong> ${n.text}</div><button class="btn btn-sm btn-outline-danger no-print" onclick="notes.splice(${i},1);saveData();renderNotes();">حذف</button></li>`).join('');
-    }
-
-    // --- تصدير PDF ---
-    function exportStaffPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.text("School Staff Database", 20, 20);
-        let y = 35;
-        staffList.forEach((t, i) => {
-            doc.text(`${i+1}. ${t.name} - ${t.subject} - ${t.job}`, 20, y);
-            y += 10;
-        });
-        doc.save("Staff.pdf");
-    }
-    function exportVisitsPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.text("Teacher Evaluation Report", 20, 20);
-        let y = 35;
-        visits.forEach((v, i) => {
-            doc.text(`${i+1}. ${v.name} | ${v.subject} | ${v.totalScore}/100 | ${v.status}`, 20, y);
-            y += 10;
-        });
-        doc.save("Visits.pdf");
-    }
-    function exportReservePDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.text("Reserve Schedule Report", 20, 20);
-        let y = 35;
-        reserves.forEach((r, i) => {
-            doc.text(`${i+1}. Absent: ${r.absentTeacher} | Lesson: ${r.lessonNum} | Substitute: ${r.reserveTeacher}`, 20, y);
-            y += 10;
-        });
-        doc.save("Reserve.pdf");
-    }
-    function exportAbsencePDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.text("Absence Report", 20, 20);
-        let y = 35;
-        absences.forEach((a, i) => {
-            doc.text(`${i+1}. Class: ${a.classGrade} | Rate: ${a.percentage}`, 20, y);
-            y += 10;
-        });
-        doc.save("Absence.pdf");
-    }
-    function exportNotesPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.text("School Log", 20, 20);
-        let y = 35;
-        notes.forEach((n, i) => {
-            doc.text(`${i+1}. [${n.timeNow}] ${n.text}`, 20, y);
-            y += 10;
-        });
-        doc.save("Notes.pdf");
-    }
-</script>
-
-</body>
-</html>
