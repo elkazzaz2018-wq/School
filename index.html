@@ -187,8 +187,8 @@
                     <button class="btn btn-outline-danger btn-sm no-print" type="button" onclick="exportVisitsPDF()">📥 تصدير PDF</button>
                 </div>
                 <table class="table table-bordered table-striped text-center align-middle">
-                    <thead class="table-dark"><tr><th>المعلم</th><th>المادة</th><th>الفصل</th><th>المجموع</th><th>الحالة</th><th class="no-print">إجراءات واتساب وحذف</th></tr></thead>
-                    <tbody id="visitsBody"><tr><td colspan="6" class="text-muted">لا توجد زيارات مسجلة.</td></tr></tbody>
+                    <thead class="table-dark"><tr><th>تاريخ المتابعة</th><th>المعلم</th><th>المادة</th><th>الفصل</th><th>المجموع</th><th>الحالة</th><th class="no-print">إجراءات واتساب وحذف</th></tr></thead>
+                    <tbody id="visitsBody"><tr><td colspan="7" class="text-muted">لا توجد زيارات مسجلة.</td></tr></tbody>
                 </table>
             </div>
         </div>
@@ -271,7 +271,7 @@
         if (splash) {
             splash.style.opacity = "0";
             setTimeout(() => {
-                splash.remove(); // إزالة الشاشة من الصفحة نهائياً
+                splash.remove();
             }, 500);
         }
     }
@@ -481,6 +481,7 @@
         let name = document.getElementById("teacherSelectVisit").value;
         let subject = document.getElementById("subjectName").value;
         let className = document.getElementById("classNameVisit").value;
+        let visitDate = new Date().toLocaleDateString('ar-EG'); // تاريخ اليوم تلقائياً
 
         let v1 = parseFloat(document.getElementById("v1").value) || 0;
         let v2 = parseFloat(document.getElementById("v2").value) || 0;
@@ -495,16 +496,16 @@
         let status = totalScore >= 85 ? "ممتاز (منضبط)" : (totalScore >= 70 ? "جيد جداً" : "⚠️ مقصر / يحتاج توجيه");
         let badgeClass = totalScore >= 85 ? "bg-success" : (totalScore >= 70 ? "bg-primary" : "bg-danger");
 
-        visits.push({ name, subject, className, totalScore, status, badgeClass, details: {v1,v2,v3,v4,v5,v6} });
+        visits.push({ visitDate, name, subject, className, totalScore, status, badgeClass, details: {v1,v2,v3,v4,v5,v6} });
         saveData();
         renderVisits(visits);
-        alert("تم حفظ التقييم بنجاح!");
+        alert("تم حفظ التقييم وتاريخ المتابعة بنجاح!");
     }
 
     function renderVisits(dataList) {
         let tbody = document.getElementById("visitsBody");
         tbody.innerHTML = "";
-        if(dataList.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="text-muted">لا توجد زيارات مسجلة.</td></tr>`; return; }
+        if(dataList.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="text-muted">لا توجد زيارات مسجلة.</td></tr>`; return; }
         
         dataList.forEach((v, i) => {
             let deficiencies = [];
@@ -523,13 +524,14 @@
             if(cleanPhone && !cleanPhone.startsWith('2')) cleanPhone = '2' + cleanPhone;
 
             let defText = deficiencies.length > 0 ? "البنود التي تحتاج إلى تدارك ودعم: " + deficiencies.join('، ') : "متابعة عامة للعملية التعليمية.";
-            let msg = `تحية طيبة الأستاذ/ة ${v.name}،\nبناءً على المتابعة الفنية اليومية لحصتك في مادة ${v.subject} (فصل ${v.className})، بلغ مجموع تقييمك ${v.totalScore}/100.\n${defText}\nرجاءً التكرم بالمتابعة وتلافي الملاحظات. تمنياتنا بالتوفيق الدائم.\n(إدارة المدرسة / أ. أميرة شلبي)`;
+            let msg = `تحية طيبة الأستاذ/ة ${v.name}،\nبناءً على المتابعة الفنية بتاريخ (${v.visitDate}) لحصتك في مادة ${v.subject} (فصل ${v.className})، بلغ مجموع تقييمك ${v.totalScore}/100.\n${defText}\nرجاءً التكرم بالمتابعة وتلافي الملاحظات. تمنياتنا بالتوفيق الدائم.\n(إدارة المدرسة / أ. أميرة شلبي)`;
             let encodedMsg = encodeURIComponent(msg);
 
             let whatsappBtn = cleanPhone ? `<a href="https://wa.me/${cleanPhone}?text=${encodedMsg}" target="_blank" class="btn btn-sm btn-success mb-1">💬 إرسال واتساب</a>` : `<span class="text-muted small d-block">لا يوجد هاتف</span>`;
 
             tbody.innerHTML += `
                 <tr>
+                    <td><span class="badge bg-secondary">${v.visitDate || 'اليوم'}</span></td>
                     <td><strong>${v.name}</strong></td>
                     <td>${v.subject}</td>
                     <td>${v.className}</td>
@@ -615,7 +617,7 @@
         doc.text("Teacher Evaluation Report", 20, 20);
         let y = 35;
         visits.forEach((v, i) => {
-            doc.text(`${i+1}. ${v.name} | ${v.subject} | ${v.totalScore}/100 | ${v.status}`, 20, y);
+            doc.text(`${i+1}. [${v.visitDate}] ${v.name} | ${v.subject} | ${v.totalScore}/100 | ${v.status}`, 20, y);
             y += 10;
         });
         doc.save("Visits.pdf");
